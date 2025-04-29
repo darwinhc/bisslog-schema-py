@@ -1,13 +1,20 @@
 # bisslog-schema-py
 
+[![PyPI](https://img.shields.io/pypi/v/bisslog_schema)](https://pypi.org/project/bisslog_schema/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 **bisslog-schema-py** is a lightweight framework to organize and document the key elements of a distributed system, focusing on its use cases and service design.  
 It structures the metadata without exposing any underlying technical or implementation-specific details.
+The goal is to design and document a distributed system from a service-centric perspective, emphasizing business use cases and their criticality, while remaining technology-agnostic.
 
----
 
-## Objective
+## 🚀 Installation
+You can install `bisslog-pymongo` using **pip**:
 
-To design and document a distributed system from a service-centric perspective, emphasizing business use cases and their criticality, while remaining technology-agnostic.
+```bash
+pip install bisslog_pymongo
+```
+
 
 ---
 
