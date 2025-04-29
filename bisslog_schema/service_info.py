@@ -4,7 +4,6 @@ Module providing the ServiceInfo dataclass to represent service-level metadata.
 This module defines the ServiceInfo dataclass that extends EntityInfo to include
 details such as service type, owning team, and associated use cases.
 """
-
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 
