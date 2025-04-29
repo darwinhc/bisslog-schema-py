@@ -8,7 +8,7 @@ from typing import List, Optional, Union
 
 from bisslog_schema.entity_info import EntityInfo
 from bisslog_schema.enums.criticality_enum import CriticalityEnum
-from bisslog_schema.trigger_info import TriggerInfo
+from bisslog_schema.triggers.trigger_info import TriggerInfo
 
 
 @dataclass

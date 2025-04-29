@@ -25,3 +25,6 @@ include = ["bisslog_schema", "bisslog_schema.*"]
 [tool.setuptools_scm]
 version_scheme = "post-release"
 local_scheme = "no-local-version"
+
+[project.optional-dependencies]
+yaml = ["requirements/requirements-yaml.txt"]

@@ -1,9 +1,5 @@
 """
 Defines event delivery semantics used across the application.
-
-This module provides enumerations for describing how events
-should be delivered in distributed systems, focusing on 
-reliability and duplication guarantees.
 """
 
 from enum import Enum

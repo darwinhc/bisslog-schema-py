@@ -5,7 +5,7 @@ This module defines the ServiceInfo dataclass that extends EntityInfo to include
 details such as service type, owning team, and associated use cases.
 """
 from dataclasses import dataclass, field
-from typing import Optional, List, Dict
+from typing import Optional, Dict
 
 from bisslog_schema.entity_info import EntityInfo
 from bisslog_schema.use_case_info import UseCaseInfo

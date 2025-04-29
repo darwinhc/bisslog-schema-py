@@ -1,14 +1,13 @@
 import pytest
 
 from bisslog_schema.enums.event_delivery_semantic_enum import EventDeliverySemantic
-from bisslog_schema.trigger_info import (
-    TriggerInfo,
-    TriggerHttp,
-    TriggerWebsocket,
-    TriggerConsumer,
-    TriggerSchedule,
-    TriggerEnum
-)
+from bisslog_schema.triggers.trigger_info import TriggerInfo
+from bisslog_schema.triggers.trigger_http import TriggerHttp
+from bisslog_schema.triggers.trigger_websocket import TriggerWebsocket
+from bisslog_schema.triggers.trigger_consumer import TriggerConsumer
+from bisslog_schema.triggers.trigger_schedule import TriggerSchedule
+from bisslog_schema.enums.trigger_type_enum import TriggerEnum
+
 
 def test_trigger_http_from_dict():
     data = {"method": "GET", "authenticator": None, "route": "/test", "apigw": "my-api"}
