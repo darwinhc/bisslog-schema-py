@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Type, Dict, Any
 
-
+from bisslog_schema.enums.event_delivery_semantic_enum import EventDeliverySemantic
 
 
 class TriggerOptions(ABC):
@@ -112,6 +112,7 @@ class TriggerConsumer(TriggerOptions):
         The partition key if applicable."""
     queue: Optional[str] = None
     partition: Optional[str] = None
+    delivery_semantic: EventDeliverySemantic = EventDeliverySemantic.AT_LEAST_ONCE
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "TriggerConsumer":
@@ -128,7 +129,8 @@ class TriggerConsumer(TriggerOptions):
             An instance of a subclass implementing TriggerConsumer."""
         return cls(
             queue=data.get("queue"),
-            partition=data.get("partition")
+            partition=data.get("partition"),
+            delivery_semantic=EventDeliverySemantic.from_value(data.get("delivery_semantic"))
         )
 
 
