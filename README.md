@@ -9,10 +9,10 @@ The goal is to design and document a distributed system from a service-centric p
 
 
 ## 🚀 Installation
-You can install `bisslog-pymongo` using **pip**:
+You can install `bisslog-schema` using **pip**:
 
 ```bash
-pip install bisslog_pymongo
+pip install bisslog_schema
 ```
 
 
