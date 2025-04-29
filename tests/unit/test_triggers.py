@@ -1,4 +1,6 @@
 import pytest
+
+from bisslog_schema.enums.event_delivery_semantic_enum import EventDeliverySemantic
 from bisslog_schema.trigger_info import (
     TriggerInfo,
     TriggerHttp,
@@ -26,6 +28,7 @@ def test_trigger_consumer_from_dict():
     trigger_consumer = TriggerConsumer.from_dict(data)
     assert trigger_consumer.queue == "my-queue"
     assert trigger_consumer.partition == "0"
+    assert trigger_consumer.delivery_semantic == EventDeliverySemantic.AT_LEAST_ONCE
 
 def test_trigger_schedule_from_dict():
     data = {"cronjob": "0 12 * * *"}
