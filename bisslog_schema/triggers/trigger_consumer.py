@@ -6,6 +6,9 @@ from .trigger_options import TriggerOptions
 from ..enums.event_delivery_semantic_enum import EventDeliverySemantic
 
 
+expected_keys = ("event", "context")
+
+
 @dataclass
 class TriggerConsumer(TriggerOptions):
     """Options for configuring a consumer trigger (e.g., queue consumer).
@@ -33,8 +36,18 @@ class TriggerConsumer(TriggerOptions):
         -------
         TriggerConsumer
             An instance of a subclass implementing TriggerConsumer."""
+
+        mapper: Optional[dict[str, str]] = data.get("mapper")
+        if mapper is not None:
+            for source in mapper.keys():
+                resource_source = source.split(".", 1)
+                if resource_source not in expected_keys:
+                    raise ValueError(f"Resource source {resource_source} does not exist "
+                                     "for trigger consumer")
+
         return cls(
             queue=data.get("queue"),
             partition=data.get("partition"),
+            mapper=mapper,
             delivery_semantic=EventDeliverySemantic.from_value(data.get("delivery_semantic"))
         )

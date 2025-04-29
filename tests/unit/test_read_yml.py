@@ -12,6 +12,11 @@ def test_read_yml_webhook_example():
     assert service_data.name == "webhook receiver"
     assert service_data.team == "code-infrastructure"
 
+    mapper1 = service_data.use_cases["notifyEventFromWebhookDynamicPlatform"].triggers[0].options.mapper
+    assert mapper1 is None
+
+    mapper2 = service_data.use_cases["addEventAdmitted"].triggers[0].options.mapper
+    assert mapper2 is not None and isinstance(mapper2, dict) and len(mapper2) == 3
 
     assert service_data.use_cases["getWebhookEventType"].criticality == CriticalityEnum.VERY_HIGH
 

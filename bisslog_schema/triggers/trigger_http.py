@@ -4,6 +4,8 @@ from typing import Optional, Dict, Any
 
 from .trigger_options import TriggerOptions
 
+expected_keys = ("path_query", "body", "params", "headers", "context")
+
 
 @dataclass
 class TriggerHttp(TriggerOptions):
@@ -40,10 +42,20 @@ class TriggerHttp(TriggerOptions):
         -------
         TriggerHttp
             An instance of a subclass implementing TriggerWebsocket."""
+
+        mapper = data.get("mapper")
+        if mapper is not None:
+            for source in mapper.keys():
+                source_resource = source.split(".")[0]
+                if source_resource not in expected_keys:
+                    raise ValueError(f"The source resource {source_resource} "
+                                     "does not exist for http trigger mapper")
+
         return cls(
             method=data.get("method"),
             authenticator=data.get("authenticator"),
             route=data.get("route"),
+            mapper=mapper,
             apigw=data.get("apigw"),
             cacheable=data.get("cacheable", False)
         )

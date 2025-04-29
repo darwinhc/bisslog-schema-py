@@ -16,6 +16,7 @@ class TriggerSchedule(TriggerOptions):
     cronjob : str, optional
         Cron expression specifying the schedule."""
     cronjob: Optional[str] = None
+    event: Optional[Any] = None
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "TriggerSchedule":
@@ -30,4 +31,4 @@ class TriggerSchedule(TriggerOptions):
         -------
         TriggerSchedule
             An instance of a subclass implementing TriggerSchedule."""
-        return cls(cronjob=data.get("cronjob"))
+        return cls(cronjob=data.get("cronjob"), mapper=data.get("mapper"))
