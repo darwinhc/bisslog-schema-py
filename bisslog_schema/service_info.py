@@ -6,7 +6,7 @@ details such as service type, owning team, and associated use cases.
 """
 
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from bisslog_schema.entity_info import EntityInfo
 from bisslog_schema.use_case_info import UseCaseInfo
@@ -34,7 +34,7 @@ class ServiceInfo(EntityInfo):
 
     service_type: Optional[str] = None
     team: Optional[str] = None
-    use_cases: List[UseCaseInfo] = field(default_factory=list)
+    use_cases: Dict[str, UseCaseInfo] = field(default_factory=list)
 
     @staticmethod
     def from_dict(data: dict) -> "ServiceInfo":
@@ -55,14 +55,14 @@ class ServiceInfo(EntityInfo):
             A populated ServiceInfo object.
         """
         tags = data.get("tags", {})
-        use_cases_data = data.get("use_cases", [])
-        use_cases = []
-        for use_case_data in use_cases_data:
+        use_cases_data = data.get("use_cases", {})
+        use_cases = {}
+        for keyname, use_case_data in use_cases_data.items():
             new_uc_tags = tags.copy()
             uc_tags: dict = use_case_data.get("tags", {})
             new_uc_tags.update(uc_tags)
             use_case_data["tags"] = new_uc_tags
-            use_cases.append(UseCaseInfo.from_dict(use_case_data))
+            use_cases[keyname] = UseCaseInfo.from_dict(use_case_data)
         return ServiceInfo(
             name=data.get("name"),
             description=data.get("description"),

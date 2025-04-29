@@ -13,7 +13,7 @@ def test_read_yml_webhook_example():
     assert service_data.team == "code-infrastructure"
 
 
-    assert service_data.use_cases[3].criticality == CriticalityEnum.VERY_HIGH
+    assert service_data.use_cases["getWebhookEventType"].criticality == CriticalityEnum.VERY_HIGH
 
 
 def test_read_yml_not_found_defined_path():
@@ -39,4 +39,4 @@ def test_read_service_metadata(path_option):
         assert service_data.name == "webhook receiver"
         assert service_data.team == "code-infrastructure"
 
-        assert service_data.use_cases[3].criticality == CriticalityEnum.VERY_HIGH
+        assert service_data.use_cases["getWebhookEventType"].criticality == CriticalityEnum.VERY_HIGH

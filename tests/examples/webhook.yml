@@ -8,7 +8,7 @@ tags:
   service: "webhook-receptor"
 
 use_cases:
-  - keyname: "notifyEventFromWebhookDynamicPlatform"
+  notifyEventFromWebhookDynamicPlatform:
     name: "notify external event from external platform"
     description: "Receives events from external platform and converts them to company events and inserts them into the corresponding queue for further internal processing through the queue"
     actor: "external platform"
@@ -22,7 +22,7 @@ use_cases:
           apigw: "webhook-receptor"
     tags:
       accessibility: "private"
-  - keyname: "deleteWebhookEventType"
+  deleteWebhookEventType:
     name: "delete webhook event type"
     type: "delete functional data"
     description: "Deletes a webhook event type in database"
@@ -37,7 +37,7 @@ use_cases:
           apigw: "internal"
     tags:
       accessibility: "private"
-  - keyname: "getAllWebhookEventType"
+  getAllWebhookEventType:
     name: "get all webhook event types"
     actor: "webhook event type modifier"
     description: "Gets all webhook event types in database"
@@ -52,7 +52,7 @@ use_cases:
       accessibility: "public"
     criticality: "medium"
     type: "read list functional data"
-  - keyname: "getWebhookEventType"
+  getWebhookEventType:
     name: "get webhook event type"
     description: "Gets a webhook event type in database"
     triggers:
@@ -67,7 +67,7 @@ use_cases:
     criticality: 90
     type: "read functional data"
     actor: "webhook event type modifier"
-  - keyname: "registerWebhookEventType"
+  registerWebhookEventType:
     name: "register webhook event type"
     description: "Registers or creates a webhook event type in database"
     triggers:
@@ -82,7 +82,7 @@ use_cases:
     criticality: "medium"
     type: "create functional data"
     actor: "webhook event type modifier"
-  - keyname: "addEventAdmitted"
+  addEventAdmitted:
     name: "add event type admitted to platform"
     description: "Updates adding event type admitted to platform if not exists, otherwise updates"
     triggers:
@@ -97,7 +97,7 @@ use_cases:
     criticality: "medium"
     type: "create functional data"
     actor: "webhook event type modifier"
-  - keyname: "updateWebhookEventType"
+  updateWebhookEventType:
     name: "update webhook event type"
     description: "Update a webhook event type in database"
     triggers:
@@ -112,7 +112,7 @@ use_cases:
     criticality: "medium"
     type: "update functional data"
     actor: "webhook event type modifier"
-  - keyname: "deleteWebhookPlatformReceiver"
+  deleteWebhookPlatformReceiver:
     name: "delete webhook platform receiver"
     description: "Deletes a webhook platform in database"
     triggers:
@@ -127,7 +127,7 @@ use_cases:
     criticality: "medium"
     type: "delete functional data"
     actor: "webhook event type modifier"
-  - keyname: "getAllWebhookPlatformReceiver"
+  getAllWebhookPlatformReceiver:
     name: "get all webhook platforms"
     description: "Gets all webhook platforms in database"
     triggers:
@@ -142,7 +142,7 @@ use_cases:
     criticality: "medium"
     type: "read list functional data"
     actor: "webhook event type modifier"
-  - keyname: "getWebhookPlatformReceiver"
+  getWebhookPlatformReceiver:
     name: "get webhook platform receiver"
     description: "Gets a webhook platform in database"
     triggers:
@@ -157,7 +157,7 @@ use_cases:
     criticality: "medium"
     type: "read functional data"
     actor: "webhook event type modifier"
-  - keyname: "registerWebhookPlatformReceiver"
+  registerWebhookPlatformReceiver:
     name: "register webhook platform receiver"
     description: "Registers or creates a webhook platform in database"
     triggers:
@@ -172,7 +172,7 @@ use_cases:
     criticality: "medium"
     type: "create functional data"
     actor: "webhook event type modifier"
-  - keyname: "updateWebhookPlatformReceiver"
+  updateWebhookPlatformReceiver:
     name: "update webhook platform receiver"
     description: "Update a webhook platform in database"
     triggers:

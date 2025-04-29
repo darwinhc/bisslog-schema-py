@@ -17,8 +17,6 @@ class UseCaseInfo(EntityInfo):
 
     Attributes
     ----------
-    keyname : Optional[str]
-        A unique identifier for the use case.
     triggers : List[TriggerInfo]
         A list of triggers that initiate the use case.
     criticality : Optional[Union[str, CriticalityEnum, int]]
@@ -26,8 +24,6 @@ class UseCaseInfo(EntityInfo):
     actor : Optional[str]
         The primary actor that interacts with the use case.
     """
-
-    keyname: Optional[str] = None
     triggers: List[TriggerInfo] = field(default_factory=list)
     criticality: Optional[Union[str, CriticalityEnum, int]] = CriticalityEnum.MEDIUM
     actor: Optional[str] = None
@@ -63,7 +59,6 @@ class UseCaseInfo(EntityInfo):
             description=data.get("description"),
             type=data.get("type"),
             tags=data.get("tags", {}),
-            keyname=data.get("keyname"),
             triggers=triggers,
             criticality=criticality,
             actor=data.get("actor"),
