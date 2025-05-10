@@ -27,7 +27,7 @@ class EventDeliverySemantic(Enum):
 
     def __new__(cls, value):
         obj = object.__new__(cls)
-        obj.value = value
+        obj.val = value
         _value_to_member_map_[value] = obj
         return obj
 

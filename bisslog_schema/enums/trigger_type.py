@@ -30,7 +30,7 @@ class TriggerEnum(Enum):
     SCHEDULE = ("schedule", TriggerSchedule)
 
     def __init__(self, value: str, cls: Type[TriggerOptions]):
-        self.value = value
+        self.val = value
         self.cls = cls
 
     @staticmethod
@@ -46,6 +46,6 @@ class TriggerEnum(Enum):
         -------
         TriggerEnum"""
         for trigger in TriggerEnum:
-            if trigger.value == value:
+            if trigger.val == value:
                 return trigger
         return None
