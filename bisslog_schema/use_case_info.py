@@ -14,16 +14,19 @@ from bisslog_schema.triggers.trigger_info import TriggerInfo
 
 @dataclass
 class UseCaseInfo(EntityInfo):
-    """Represents a use case with metadata including triggers, criticality, and associated actor.
+    """
+    Represents a use case with metadata including triggers, criticality, and associated actor.
 
     Attributes
     ----------
     triggers : List[TriggerInfo]
         A list of triggers that initiate the use case.
     criticality : Optional[Union[str, CriticalityEnum, int]]
-        The criticality level of the use case.
+        The criticality level of the use case. Defaults to MEDIUM.
     actor : Optional[str]
         The primary actor that interacts with the use case.
+    external_interactions : List[ExternalInteraction]
+        A list of external interactions associated with the use case.
     """
     triggers: List[TriggerInfo] = field(default_factory=list)
     criticality: Optional[Union[str, CriticalityEnum, int]] = CriticalityEnum.MEDIUM
@@ -32,7 +35,8 @@ class UseCaseInfo(EntityInfo):
 
     @staticmethod
     def from_dict(data: dict) -> "UseCaseInfo":
-        """Creates a UseCaseInfo instance from a dictionary.
+        """
+        Creates a UseCaseInfo instance from a dictionary.
 
         Parameters
         ----------
@@ -43,33 +47,51 @@ class UseCaseInfo(EntityInfo):
         -------
         UseCaseInfo
             An instance populated with the provided data.
+
+        Raises
+        ------
+        ValueError
+            If required fields are missing or invalid.
         """
+        if "name" not in data or not isinstance(data["name"], str):
+            raise ValueError("The 'name' field is required and must be a string.")
+
         triggers_data = data.get("triggers", [])
-        triggers = [TriggerInfo.from_dict(t) for t in triggers_data]
+        triggers = []
+        for t in triggers_data:
+            try:
+                triggers.append(TriggerInfo.from_dict(t))
+            except Exception as e:
+                raise ValueError(f"Error processing a trigger: {e}")
 
-        criticality = data.get("criticality")
-        new_criticality = None
+        criticality = data.get("criticality", CriticalityEnum.MEDIUM)
         if isinstance(criticality, (int, float)):
-            new_criticality = CriticalityEnum.get_from_int_val(criticality)
-        if isinstance(criticality, str) and criticality.upper() in CriticalityEnum.__members__:
-            new_criticality = CriticalityEnum[criticality.upper()]
-        if new_criticality is not None:
-            criticality = new_criticality
+            criticality = CriticalityEnum.get_from_int_val(criticality)
+        elif isinstance(criticality, str) and criticality.upper() in CriticalityEnum.__members__:
+            criticality = CriticalityEnum[criticality.upper()]
+        elif not isinstance(criticality, CriticalityEnum):
+            raise ValueError(f"Invalid criticality value: {criticality}")
 
-        external_interactions = data.get("external_interactions", [])
-        if isinstance(external_interactions, (list, tuple)):
-            external_interactions = [
-                ExternalInteraction.from_dict(data)
-                for data in external_interactions
-            ]
-        elif isinstance(external_interactions, dict):
-            external_interactions = [
-                ExternalInteraction.from_dict(data, keyname=key)
-                for key, data in external_interactions.items()
-            ]
+        external_interactions_data = data.get("external_interactions", [])
+        external_interactions = []
+        if not isinstance(external_interactions_data, (list, tuple, dict)):
+            raise ValueError(f"Invalid external interactions data: {external_interactions_data}")
+        if isinstance(external_interactions_data, (list, tuple)):
+            for ei_data in external_interactions_data:
+                try:
+                    external_interactions.append(ExternalInteraction.from_dict(ei_data))
+                except Exception as e:
+                    raise ValueError(f"Error processing an external interaction: {e}")
+        elif isinstance(external_interactions_data, dict):
+            for key, ei_data in external_interactions_data.items():
+                try:
+                    external_interactions.append(ExternalInteraction.from_dict(ei_data, keyname=key))
+                except Exception as e:
+                    raise ValueError(f"Error processing an external interaction with key '{key}': {e}")
+
 
         return UseCaseInfo(
-            name=data.get("name"),
+            name=data["name"],
             description=data.get("description"),
             type=data.get("type"),
             tags=data.get("tags", {}),
