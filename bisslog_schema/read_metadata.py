@@ -42,6 +42,9 @@ def read_service_metadata(path: Optional[str] = None, encoding: str = "utf-8") -
     ValueError
         If the given path does not exist or if no default file is found.
     """
+    if path is None:
+        # Check if the environment variable is set and use it if available
+        path = os.getenv("SERVICE_METADATA_PATH")
     if path is not None:
         if not os.path.isfile(path):
             raise ValueError(f"Path {path} of metadata does not exist")
