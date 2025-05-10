@@ -221,7 +221,7 @@ use_cases:
 
 To Run test with coverage
 ~~~cmd
-coverage run --source=bisslog -m pytest tests/
+coverage run --source=bisslog_schema -m pytest tests/
 ~~~
 
 
