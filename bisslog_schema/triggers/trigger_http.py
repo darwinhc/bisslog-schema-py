@@ -2,13 +2,14 @@
 from dataclasses import dataclass
 from typing import Optional, Dict, Any
 
+from .trigger_mappable import TriggerMappable
 from .trigger_options import TriggerOptions
 
 expected_keys = ("path_query", "body", "params", "headers", "context")
 
 
 @dataclass
-class TriggerHttp(TriggerOptions):
+class TriggerHttp(TriggerOptions, TriggerMappable):
     """Options for configuring an HTTP trigger.
 
     Attributes
@@ -44,12 +45,7 @@ class TriggerHttp(TriggerOptions):
             An instance of a subclass implementing TriggerWebsocket."""
 
         mapper = data.get("mapper")
-        if mapper is not None:
-            for source in mapper.keys():
-                source_resource = source.split(".")[0]
-                if source_resource not in expected_keys:
-                    raise ValueError(f"The source resource {source_resource} "
-                                     "does not exist for http trigger mapper")
+        cls.verify_source_prefix(mapper, expected_keys)
 
         return cls(
             method=data.get("method"),

@@ -31,4 +31,4 @@ class TriggerSchedule(TriggerOptions):
         -------
         TriggerSchedule
             An instance of a subclass implementing TriggerSchedule."""
-        return cls(cronjob=data.get("cronjob"), mapper=data.get("mapper"))
+        return cls(cronjob=data.get("cronjob"), event=data.get("event", {}))

@@ -2,15 +2,16 @@
 from dataclasses import dataclass
 from typing import Optional, Dict, Any
 
+from .trigger_mappable import TriggerMappable
 from .trigger_options import TriggerOptions
-from ..enums.event_delivery_semantic_enum import EventDeliverySemantic
+from ..enums.event_delivery_semantic import EventDeliverySemantic
 
 
 expected_keys = ("event", "context")
 
 
 @dataclass
-class TriggerConsumer(TriggerOptions):
+class TriggerConsumer(TriggerOptions, TriggerMappable):
     """Options for configuring a consumer trigger (e.g., queue consumer).
 
     Attributes
@@ -38,12 +39,7 @@ class TriggerConsumer(TriggerOptions):
             An instance of a subclass implementing TriggerConsumer."""
 
         mapper: Optional[dict[str, str]] = data.get("mapper")
-        if mapper is not None:
-            for source in mapper.keys():
-                resource_source = source.split(".", 1)
-                if resource_source not in expected_keys:
-                    raise ValueError(f"Resource source {resource_source} does not exist "
-                                     "for trigger consumer")
+        cls.verify_source_prefix(mapper, expected_keys)
 
         return cls(
             queue=data.get("queue"),

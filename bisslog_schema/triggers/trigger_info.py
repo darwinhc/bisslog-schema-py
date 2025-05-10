@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from typing import Dict, Any
 
-from ..enums.trigger_type_enum import TriggerEnum
+from ..enums.trigger_type import TriggerEnum
 from .trigger_options import TriggerOptions
 
 
@@ -17,7 +17,7 @@ class TriggerInfo:
     options : TriggerOptions
         The configuration options specific to the trigger type."""
     type: TriggerEnum
-    options: TriggerOptions
+    options: TriggerOptions|Dict[str, Any]
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> "TriggerInfo":
@@ -38,6 +38,9 @@ class TriggerInfo:
 
         trigger_type = TriggerEnum.from_str(type_str)
 
-        cls = trigger_type.cls
+        options = data.get("options", {})
+        if trigger_type is not None:
+            cls = trigger_type.cls
+            options = cls.from_dict(options)
 
-        return TriggerInfo(trigger_type, cls.from_dict(data.get("options", {})))
+        return TriggerInfo(trigger_type, options)

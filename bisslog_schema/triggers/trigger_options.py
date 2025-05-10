@@ -1,15 +1,12 @@
 """Module defining trigger configuration abstract class"""
 from abc import ABC
-from dataclasses import dataclass
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 
-@dataclass
 class TriggerOptions(ABC):
     """Abstract base class for trigger-specific options.
 
     All trigger option classes must implement the from_dict method for deserialization."""
-    mapper: Optional[Dict[str, str]] = None
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "TriggerOptions":

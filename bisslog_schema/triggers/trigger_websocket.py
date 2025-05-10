@@ -2,11 +2,14 @@
 from dataclasses import dataclass
 from typing import Optional, Dict, Any
 
+from .trigger_mappable import TriggerMappable
 from .trigger_options import TriggerOptions
+
+expected_keys = ("event", "context")
 
 
 @dataclass
-class TriggerWebsocket(TriggerOptions):
+class TriggerWebsocket(TriggerOptions, TriggerMappable):
     """Options for configuring a WebSocket trigger.
 
     Attributes
@@ -28,4 +31,6 @@ class TriggerWebsocket(TriggerOptions):
         -------
         TriggerWebsocket
             An instance of a subclass implementing TriggerWebsocket."""
-        return cls(route_key=data.get("routeKey"))
+        mapper: Optional[dict[str, str]] = data.get("mapper")
+        cls.verify_source_prefix(mapper, expected_keys)
+        return cls(route_key=data.get("routeKey"), mapper=mapper)
