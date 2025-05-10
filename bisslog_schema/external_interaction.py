@@ -3,7 +3,7 @@ This module defines a data structure for representing external interactions
 in a system, such as database access or external service calls.
 """
 from dataclasses import dataclass
-from typing import Optional, Any, Dict
+from typing import Optional, Any, Dict, Union
 
 from bisslog_schema.enums.type_external_interaction import TypeExternalInteraction
 
@@ -25,7 +25,7 @@ class ExternalInteraction:
         Standardized type resolved from `type_interaction` using aliases."""
     keyname: str
     type_interaction: Optional[str] = None
-    operation: Optional[str|list[str]] = None
+    operation: Optional[Union[str, list[str]]] = None
     description: Optional[str] = None
     type_interaction_standard : Optional[TypeExternalInteraction] = None
 
