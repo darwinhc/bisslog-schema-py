@@ -8,8 +8,7 @@ _value_to_member_map_ = {}
 
 
 class EventDeliverySemantic(Enum):
-    """
-    Defines the delivery semantics for event transmission.
+    """Defines the delivery semantics for event transmission.
 
     Attributes
     ----------
