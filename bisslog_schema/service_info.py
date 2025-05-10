@@ -37,8 +37,7 @@ class ServiceInfo(EntityInfo):
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> "ServiceInfo":
-        """
-        Create a ServiceInfo instance from a dictionary.
+        """Create a ServiceInfo instance from a dictionary.
 
         This method parses a dictionary structure to create a ServiceInfo object,
         merging service-level tags with use case-specific tags.
