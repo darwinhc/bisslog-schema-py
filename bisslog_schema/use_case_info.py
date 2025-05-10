@@ -7,7 +7,8 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
 from bisslog_schema.entity_info import EntityInfo
-from bisslog_schema.enums.criticality_enum import CriticalityEnum
+from bisslog_schema.enums.criticality import CriticalityEnum
+from bisslog_schema.external_interaction import ExternalInteraction
 from bisslog_schema.triggers.trigger_info import TriggerInfo
 
 
@@ -27,6 +28,7 @@ class UseCaseInfo(EntityInfo):
     triggers: List[TriggerInfo] = field(default_factory=list)
     criticality: Optional[Union[str, CriticalityEnum, int]] = CriticalityEnum.MEDIUM
     actor: Optional[str] = None
+    external_interactions: List[ExternalInteraction] = field(default_factory=list)
 
     @staticmethod
     def from_dict(data: dict) -> "UseCaseInfo":
@@ -54,12 +56,25 @@ class UseCaseInfo(EntityInfo):
         if new_criticality is not None:
             criticality = new_criticality
 
+        external_interactions = data.get("external_interactions", [])
+        if isinstance(external_interactions, (list, tuple)):
+            external_interactions = [
+                ExternalInteraction.from_dict(data)
+                for data in external_interactions
+            ]
+        elif isinstance(external_interactions, dict):
+            external_interactions = [
+                ExternalInteraction.from_dict(data, keyname=key)
+                for key, data in external_interactions.items()
+            ]
+
         return UseCaseInfo(
             name=data.get("name"),
             description=data.get("description"),
             type=data.get("type"),
             tags=data.get("tags", {}),
             triggers=triggers,
+            external_interactions=external_interactions,
             criticality=criticality,
             actor=data.get("actor"),
         )
