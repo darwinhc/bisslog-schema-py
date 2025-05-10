@@ -10,11 +10,11 @@ from bisslog_schema.enums.trigger_type import TriggerEnum
 
 
 def test_trigger_http_from_dict():
-    data = {"method": "GET", "authenticator": None, "route": "/test", "apigw": "my-api"}
+    data = {"method": "GET", "authenticator": None, "path": "/test", "apigw": "my-api"}
     trigger_http = TriggerHttp.from_dict(data)
     assert trigger_http.method == "GET"
     assert trigger_http.authenticator is None
-    assert trigger_http.route == "/test"
+    assert trigger_http.path == "/test"
     assert trigger_http.apigw == "my-api"
 
 def test_trigger_websocket_from_dict():
@@ -49,7 +49,7 @@ def test_trigger_from_dict_http():
         "options": {
             "method": "POST",
             "authenticator": "token",
-            "route": "/submit",
+            "path": "/submit",
             "apigw": "api-123"
         }
     }
@@ -58,17 +58,17 @@ def test_trigger_from_dict_http():
     assert isinstance(trigger.options, TriggerHttp)
     assert trigger.options.method == "POST"
     assert trigger.options.authenticator == "token"
-    assert trigger.options.route == "/submit"
+    assert trigger.options.path == "/submit"
     assert trigger.options.apigw == "api-123"
 
 def test_trigger_from_dict_missing_type_defaults_to_http():
     data = {
         "method": "GET",
         "authenticator": "none",
-        "route": "/",
+        "path": "/",
         "apigw": "api"
     }
-    trigger = TriggerInfo.from_dict(data.copy())
+    trigger = TriggerInfo.from_dict({"options": data})
     assert trigger.type == TriggerEnum.HTTP
     assert isinstance(trigger.options, TriggerHttp)
 
