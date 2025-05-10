@@ -2,7 +2,7 @@ name: Analyze new changes
 
 on:
   push:
-    paths:
+    branches:
       - 'feature/**'
       - 'fix/**'
       - 'hotfix/**'
