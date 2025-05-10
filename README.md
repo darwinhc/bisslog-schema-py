@@ -217,3 +217,21 @@ use_cases:
 
 - **Integration-friendly:** Can be used for CI/CD validation or automated documentation generation.
 
+## 🧪 Running library tests
+
+To Run test with coverage
+~~~cmd
+coverage run --source=bisslog -m pytest tests/
+~~~
+
+
+To generate report
+~~~cmd
+coverage html && open htmlcov/index.html
+~~~
+
+
+## 📜 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
