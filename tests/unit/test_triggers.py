@@ -1,12 +1,12 @@
 import pytest
 
-from bisslog_schema.enums.event_delivery_semantic_enum import EventDeliverySemantic
+from bisslog_schema.enums.event_delivery_semantic import EventDeliverySemantic
 from bisslog_schema.triggers.trigger_info import TriggerInfo
 from bisslog_schema.triggers.trigger_http import TriggerHttp
 from bisslog_schema.triggers.trigger_websocket import TriggerWebsocket
 from bisslog_schema.triggers.trigger_consumer import TriggerConsumer
 from bisslog_schema.triggers.trigger_schedule import TriggerSchedule
-from bisslog_schema.enums.trigger_type_enum import TriggerEnum
+from bisslog_schema.enums.trigger_type import TriggerEnum
 
 
 def test_trigger_http_from_dict():
@@ -41,8 +41,7 @@ def test_trigger_enum_from_str_valid():
     assert TriggerEnum.from_str("schedule") == TriggerEnum.SCHEDULE
 
 def test_trigger_enum_from_str_invalid():
-    with pytest.raises(ValueError, match="Unknown trigger type: invalid"):
-        TriggerEnum.from_str("invalid")
+    assert TriggerEnum.from_str("invalid") is None
 
 def test_trigger_from_dict_http():
     data = {
@@ -74,12 +73,17 @@ def test_trigger_from_dict_missing_type_defaults_to_http():
     assert isinstance(trigger.options, TriggerHttp)
 
 def test_trigger_from_dict_invalid_type():
-    data = {
-        "type": "invalid",
-        "foo": "bar"
-    }
-    with pytest.raises(ValueError, match="Unknown trigger type: invalid"):
-        TriggerInfo.from_dict(data.copy())
+    data = {"type": "invalid", "foo": "bar"}
+    trigger_info = TriggerInfo.from_dict(data.copy())
+    assert trigger_info.type is None, "Invalid trigger type should not be set"
+    assert isinstance(trigger_info.options, dict)
+    assert trigger_info.options == {}
+    data = {"type": "invalid", "foo": "bar", "options": {"bar": "baz"}}
+    trigger_info = TriggerInfo.from_dict(data.copy())
+    assert trigger_info.type is None, "Invalid trigger type should not be set"
+    assert isinstance(trigger_info.options, dict)
+    assert trigger_info.options == {"bar": "baz"}
+
 
 def test_trigger_from_dict_null():
     data = {
