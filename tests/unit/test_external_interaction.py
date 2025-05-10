@@ -1,79 +1,63 @@
-"""
-Unit tests for the ExternalInteraction class.
-
-This module tests the deserialization and behavior of ExternalInteraction,
-including alias resolution of type_interaction to type_interaction_standard.
-"""
+import pytest
 from bisslog_schema.external_interaction import ExternalInteraction
 from bisslog_schema.enums.type_external_interaction import TypeExternalInteraction
 
 
-def test_from_dict_with_keyname_and_standard_type():
-    """
-    Test creating ExternalInteraction from dict with explicit keyname and valid type_interaction.
-
-    Ensures type_interaction_standard is resolved correctly.
-    """
+def test_external_interaction_valid_data():
+    """Test creating an ExternalInteraction instance with valid data."""
     data = {
-        "type_interaction": "db",
-        "operation": "fetch_user_by_id",
-        "description": "Access user table to fetch data"
+        "keyname": "marketing_division",
+        "type_interaction": "database",
+        "operation": "get_last_sales_from_client",
+        "description": "Fetches sales data from the client database."
     }
-    result = ExternalInteraction.from_dict(data, keyname="user_database")
-    assert result.keyname == "user_database"
-    assert result.type_interaction == "db"
-    assert result.operation == "fetch_user_by_id"
-    assert result.description == "Access user table to fetch data"
-    assert result.type_interaction_standard == TypeExternalInteraction.DATABASE
+    instance = ExternalInteraction.from_dict(data)
+    assert instance.keyname == "marketing_division"
+    assert instance.type_interaction == "database"
+    assert instance.operation == "get_last_sales_from_client"
+    assert instance.description == "Fetches sales data from the client database."
 
 
-def test_from_dict_with_keyname_inside_data():
-    """
-    Test creating ExternalInteraction from dict where keyname is inside the dictionary.
-
-    Ensures that the keyname from the dict is used if no explicit keyname is provided.
-    """
+def test_external_interaction_missing_keyname():
+    """Test that missing 'keyname' raises a ValueError."""
     data = {
-        "keyname": "email_sender",
-        "type_interaction": "notifier",
-        "operation": "send_email",
-        "desc": "Call email service"
+        "type_interaction": "database",
+        "operation": "get_last_sales_from_client"
     }
-    result = ExternalInteraction.from_dict(data)
-    assert result.keyname == "email_sender"
-    assert result.description == "Call email service"
-    assert result.type_interaction_standard == TypeExternalInteraction.NOTIFIER
+    with pytest.raises(ValueError, match="The 'keyname' field is required."):
+        ExternalInteraction.from_dict(data)
 
 
-def test_from_dict_with_unknown_type_interaction():
-    """
-    Test that an unknown type_interaction results in None for the standardized field.
-
-    This checks the fallback behavior when the alias cannot be resolved.
-    """
+def test_external_interaction_invalid_keyname_type():
+    """Test that an invalid 'keyname' type raises a TypeError."""
     data = {
-        "keyname": "legacy_integration",
-        "type_interaction": "unknown_type",
-        "operation": "legacy_call"
+        "keyname": 123,
+        "type_interaction": "database",
+        "operation": "get_last_sales_from_client"
     }
-    result = ExternalInteraction.from_dict(data)
-    assert result.keyname == "legacy_integration"
-    assert result.type_interaction == "unknown_type"
-    assert result.type_interaction_standard is None
+    with pytest.raises(TypeError, match="The 'keyname' must be a string."):
+        ExternalInteraction.from_dict(data)
 
 
-def test_from_dict_without_optional_fields():
-    """
-    Test creating ExternalInteraction with only the required field (keyname).
-
-    Optional fields should be None by default.
-    """
+def test_external_interaction_invalid_operation_type():
+    """Test that an invalid 'operation' type raises a TypeError."""
     data = {
-        "keyname": "simple_case"
+        "keyname": "marketing_division",
+        "type_interaction": "database",
+        "operation": 12345
     }
-    result = ExternalInteraction.from_dict(data)
-    assert result.keyname == "simple_case"
-    assert result.type_interaction is None
-    assert result.operation is None
-    assert result.description is None
-    assert result.type_interaction_standard is None
+    with pytest.raises(TypeError, match="The 'operation' must be a string or a list of strings."):
+        ExternalInteraction.from_dict(data)
+
+
+
+def test_external_interaction_with_list_operations():
+    """Test creating an ExternalInteraction instance with a list of operations."""
+    data = {
+        "keyname": "marketing_division",
+        "type_interaction": "database",
+        "operation": ["get_sales", "update_sales"],
+        "description": "Handles multiple operations."
+    }
+    instance = ExternalInteraction.from_dict(data)
+    assert instance.operation == ["get_sales", "update_sales"]

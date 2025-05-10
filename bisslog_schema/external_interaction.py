@@ -46,15 +46,29 @@ class ExternalInteraction:
         ExternalInteraction
            An instance of a subclass implementing ExternalInteraction."""
 
+        if not keyname and "keyname" not in data:
+            raise ValueError("The 'keyname' field is required.")
+        keyname = keyname or data["keyname"]
+        if keyname and not isinstance(keyname, str):
+            raise TypeError("The 'keyname' must be a string.")
+
+        operation = data.get("operation")
+        if operation and not (isinstance(operation, str) or
+                              (isinstance(operation, list) and all(isinstance(op, str) for op in operation))):
+            raise TypeError("The 'operation' must be a string or a list of strings.")
+
         type_interaction = data.get("type_interaction")
         type_interaction_standard = None
         if type_interaction is not None:
             type_interaction_standard = TypeExternalInteraction.from_str(type_interaction)
 
-        return ExternalInteraction(
-            keyname if keyname is not None else data.get("keyname"),
-            type_interaction,
-            data.get("operation"),
-            data.get("description") or data.get("desc"),
-            type_interaction_standard
+
+        description = data.get("description") or data.get("desc")
+
+        return cls(
+            keyname=keyname,
+            type_interaction=type_interaction,
+            operation=operation,
+            description=description,
+            type_interaction_standard=type_interaction_standard
         )
