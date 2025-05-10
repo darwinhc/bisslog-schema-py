@@ -21,26 +21,41 @@ class TriggerInfo:
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> "TriggerInfo":
-        """Enumeration of available trigger types and their associated option classes.
+        """
+        Creates a TriggerInfo instance from a dictionary.
 
         Parameters
         ----------
         data : dict
-            Dictionary containing the trigger options.
+            Dictionary containing the trigger configuration.
+
         Returns
         -------
         TriggerInfo
-            An instance of a subclass implementing TriggerSchedule."""
+            An instance of TriggerInfo.
 
+        Raises
+        ------
+        ValueError
+            If required fields are missing or invalid.
+        """
+        # Validate and parse the trigger type
         type_str = data.get("type", "http")
         if not type_str:
-            raise ValueError("Trigger 'type' is required")
+            raise ValueError("Trigger 'type' is required and cannot be None or empty.")
 
         trigger_type = TriggerEnum.from_str(type_str)
 
+        # Validate and parse the options
         options = data.get("options", {})
-        if trigger_type is not None:
-            cls = trigger_type.cls
-            options = cls.from_dict(options)
 
-        return TriggerInfo(trigger_type, options)
+        if not isinstance(options, (dict, TriggerOptions)):
+            raise TypeError("The 'options' field must be a dictionary or an instance of TriggerOptions.")
+
+        if trigger_type is not None and trigger_type.cls and isinstance(options, dict):
+            try:
+                options = trigger_type.cls.from_dict(options)
+            except Exception as e:
+                raise ValueError(f"Error parsing options for trigger type '{trigger_type}': {e}") from e
+
+        return TriggerInfo(type=trigger_type, options=options)
