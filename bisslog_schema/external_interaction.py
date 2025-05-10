@@ -53,8 +53,13 @@ class ExternalInteraction:
             raise TypeError("The 'keyname' must be a string.")
 
         operation = data.get("operation")
-        if operation and not (isinstance(operation, str) or
-                              (isinstance(operation, list) and all(isinstance(op, str) for op in operation))):
+
+        if operation and not (
+            # operation is string
+            isinstance(operation, str) or (
+            # operation is list of strings
+            isinstance(operation, list) and all(isinstance(op, str) for op in operation))
+        ):
             raise TypeError("The 'operation' must be a string or a list of strings.")
 
         type_interaction = data.get("type_interaction")

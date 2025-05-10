@@ -82,7 +82,7 @@ class ServiceInfo(EntityInfo):
             try:
                 use_cases[keyname] = UseCaseInfo.from_dict(use_case_data)
             except Exception as e:
-                raise ValueError(f"Error creating UseCaseInfo for '{keyname}': {e}")
+                raise ValueError(f"Error creating UseCaseInfo for '{keyname}': {e}") from e
 
         return ServiceInfo(
             name=data["name"],

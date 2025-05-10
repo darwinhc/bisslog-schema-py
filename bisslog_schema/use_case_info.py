@@ -62,7 +62,7 @@ class UseCaseInfo(EntityInfo):
             try:
                 triggers.append(TriggerInfo.from_dict(t))
             except Exception as e:
-                raise ValueError(f"Error processing a trigger: {e}")
+                raise ValueError(f"Error processing a trigger: {e}") from e
 
         criticality = data.get("criticality", CriticalityEnum.MEDIUM)
         if isinstance(criticality, (int, float)):
@@ -81,13 +81,15 @@ class UseCaseInfo(EntityInfo):
                 try:
                     external_interactions.append(ExternalInteraction.from_dict(ei_data))
                 except Exception as e:
-                    raise ValueError(f"Error processing an external interaction: {e}")
+                    raise ValueError(f"Error processing an external interaction: {e}") from e
         elif isinstance(external_interactions_data, dict):
             for key, ei_data in external_interactions_data.items():
                 try:
-                    external_interactions.append(ExternalInteraction.from_dict(ei_data, keyname=key))
+                    external_interactions.append(
+                        ExternalInteraction.from_dict(ei_data, keyname=key))
                 except Exception as e:
-                    raise ValueError(f"Error processing an external interaction with key '{key}': {e}")
+                    raise ValueError(
+                        f"Error processing an external interaction with key '{key}': {e}") from e
 
 
         return UseCaseInfo(
