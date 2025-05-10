@@ -33,8 +33,8 @@ class UseCaseInfo(EntityInfo):
     actor: Optional[str] = None
     external_interactions: List[ExternalInteraction] = field(default_factory=list)
 
-    @staticmethod
-    def from_dict(data: dict) -> "UseCaseInfo":
+    @classmethod
+    def from_dict(cls, data: dict) -> "UseCaseInfo":
         """
         Creates a UseCaseInfo instance from a dictionary.
 
@@ -56,26 +56,54 @@ class UseCaseInfo(EntityInfo):
         if "name" not in data or not isinstance(data["name"], str):
             raise ValueError("The 'name' field is required and must be a string.")
 
-        triggers_data = data.get("triggers", [])
+        triggers = cls._parse_triggers(data.get("triggers", []))
+        criticality = cls._parse_criticality(data.get("criticality", CriticalityEnum.MEDIUM))
+        external_interactions = cls._parse_external_interactions(
+            data.get("external_interactions", [])
+        )
+
+        return cls(
+            name=data["name"],
+            description=data.get("description"),
+            type=data.get("type"),
+            tags=data.get("tags", {}),
+            triggers=triggers,
+            external_interactions=external_interactions,
+            criticality=criticality,
+            actor=data.get("actor"),
+        )
+
+    @staticmethod
+    def _parse_triggers(triggers_data: list) -> List[TriggerInfo]:
+        """Parses and validates the triggers data."""
         triggers = []
         for t in triggers_data:
             try:
                 triggers.append(TriggerInfo.from_dict(t))
             except Exception as e:
                 raise ValueError(f"Error processing a trigger: {e}") from e
+        return triggers
 
-        criticality = data.get("criticality", CriticalityEnum.MEDIUM)
+    @staticmethod
+    def _parse_criticality(criticality: Union[str, int, CriticalityEnum]) -> CriticalityEnum:
+        """Parses and validates the criticality value."""
         if isinstance(criticality, (int, float)):
-            criticality = CriticalityEnum.get_from_int_val(criticality)
-        elif isinstance(criticality, str) and criticality.upper() in CriticalityEnum.__members__:
-            criticality = CriticalityEnum[criticality.upper()]
-        elif not isinstance(criticality, CriticalityEnum):
-            raise ValueError(f"Invalid criticality value: {criticality}")
+            return CriticalityEnum.get_from_int_val(criticality)
+        if isinstance(criticality, str) and criticality.upper() in CriticalityEnum.__members__:
+            return CriticalityEnum[criticality.upper()]
+        if isinstance(criticality, CriticalityEnum):
+            return criticality
+        raise ValueError(f"Invalid criticality value: {criticality}")
 
-        external_interactions_data = data.get("external_interactions", [])
-        external_interactions = []
+    @staticmethod
+    def _parse_external_interactions(
+            external_interactions_data: Union[list, dict]
+    ) -> List[ExternalInteraction]:
+        """Parses and validates the external interaction data."""
         if not isinstance(external_interactions_data, (list, tuple, dict)):
             raise ValueError(f"Invalid external interactions data: {external_interactions_data}")
+
+        external_interactions = []
         if isinstance(external_interactions_data, (list, tuple)):
             for ei_data in external_interactions_data:
                 try:
@@ -86,19 +114,10 @@ class UseCaseInfo(EntityInfo):
             for key, ei_data in external_interactions_data.items():
                 try:
                     external_interactions.append(
-                        ExternalInteraction.from_dict(ei_data, keyname=key))
+                        ExternalInteraction.from_dict(ei_data, keyname=key)
+                    )
                 except Exception as e:
                     raise ValueError(
-                        f"Error processing an external interaction with key '{key}': {e}") from e
-
-
-        return UseCaseInfo(
-            name=data["name"],
-            description=data.get("description"),
-            type=data.get("type"),
-            tags=data.get("tags", {}),
-            triggers=triggers,
-            external_interactions=external_interactions,
-            criticality=criticality,
-            actor=data.get("actor"),
-        )
+                        f"Error processing an external interaction with key '{key}': {e}"
+                    ) from e
+        return external_interactions
