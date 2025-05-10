@@ -38,7 +38,7 @@ class TriggerConsumer(TriggerOptions, TriggerMappable):
         TriggerConsumer
             An instance of a subclass implementing TriggerConsumer."""
 
-        mapper: Optional[dict[str, str]] = data.get("mapper")
+        mapper: Optional[Dict[str, str]] = data.get("mapper")
         cls.verify_source_prefix(mapper, expected_keys)
 
         return cls(

@@ -26,7 +26,7 @@ class TriggerMappable:
     mapper: Optional[Dict[str, str]] = None
 
     @staticmethod
-    def verify_source_prefix(mapper: Optional[dict[str, str]], expected_keys: Iterable[str]):
+    def verify_source_prefix(mapper: Optional[Dict[str, str]], expected_keys: Iterable[str]):
         """
         Validates that all keys in the provided mapper start with a prefix that is allowed.
 

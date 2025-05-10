@@ -31,6 +31,6 @@ class TriggerWebsocket(TriggerOptions, TriggerMappable):
         -------
         TriggerWebsocket
             An instance of a subclass implementing TriggerWebsocket."""
-        mapper: Optional[dict[str, str]] = data.get("mapper")
+        mapper: Optional[Dict[str, str]] = data.get("mapper")
         cls.verify_source_prefix(mapper, expected_keys)
         return cls(route_key=data.get("routeKey"), mapper=mapper)

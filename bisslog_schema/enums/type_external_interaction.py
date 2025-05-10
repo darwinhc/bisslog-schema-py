@@ -3,7 +3,7 @@ This module defines an enumeration representing various types of external
 interactions within a ports and adapters (hexagonal) architecture.
 """
 from enum import Enum
-from typing import Optional
+from typing import Optional, Tuple
 
 _value_to_member_map_ = {}
 
@@ -24,7 +24,7 @@ class TypeExternalInteraction(Enum):
     UNKNOWN = "unknown", ("unknown",)
 
 
-    def __init__(self, main_identifier: str, aliases: tuple[str]):
+    def __init__(self, main_identifier: str, aliases: Tuple[str]):
         self.main_identifier = main_identifier
         self.aliases = aliases
 
