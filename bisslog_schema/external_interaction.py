@@ -25,7 +25,7 @@ class ExternalInteraction:
         Standardized type resolved from `type_interaction` using aliases."""
     keyname: str
     type_interaction: Optional[str] = None
-    operation: Optional[str] = None
+    operation: Optional[str|list[str]] = None
     description: Optional[str] = None
     type_interaction_standard : Optional[TypeExternalInteraction] = None
 
