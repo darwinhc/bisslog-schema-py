@@ -1,6 +1,6 @@
 """Module defining trigger conceptual information class"""
 from dataclasses import dataclass
-from typing import Dict, Any
+from typing import Dict, Any, Union
 
 from ..enums.trigger_type import TriggerEnum
 from .trigger_options import TriggerOptions
@@ -17,7 +17,7 @@ class TriggerInfo:
     options : TriggerOptions
         The configuration options specific to the trigger type."""
     type: TriggerEnum
-    options: TriggerOptions|Dict[str, Any]
+    options: Union[TriggerOptions, Dict[str, Any]]
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> "TriggerInfo":
