@@ -27,15 +27,13 @@ class EventDeliverySemantic(Enum):
 
     def __new__(cls, value):
         obj = object.__new__(cls)
-        obj._value_ = value
-        # Durante la creación de cada miembro, guardamos en el mapa
+        obj.value = value
         _value_to_member_map_[value] = obj
         return obj
 
     @classmethod
     def from_value(cls, value: str) -> "EventDeliverySemantic":
-        """
-        Returns the corresponding EventDeliverySemantic member for a given value.
+        """Returns the corresponding EventDeliverySemantic member for a given value.
 
         Parameters
         ----------

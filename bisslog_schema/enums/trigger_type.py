@@ -2,7 +2,7 @@
 Module defining the Trigger Type Enum and associated trigger classes
 """
 from enum import Enum
-from typing import Type
+from typing import Type, Optional
 
 from ..triggers.trigger_consumer import TriggerConsumer
 from ..triggers.trigger_options import TriggerOptions
@@ -30,11 +30,11 @@ class TriggerEnum(Enum):
     SCHEDULE = ("schedule", TriggerSchedule)
 
     def __init__(self, value: str, cls: Type[TriggerOptions]):
-        self._value_ = value  # importante: esto define el string que tendrá el enum
-        self.cls = cls        # esto es tu clase asociada
+        self.value = value
+        self.cls = cls
 
     @staticmethod
-    def from_str(value: str) -> "TriggerEnum":
+    def from_str(value: str) -> Optional["TriggerEnum"]:
         """Converts from string to TriggerEnum
 
         Parameters
@@ -48,4 +48,4 @@ class TriggerEnum(Enum):
         for trigger in TriggerEnum:
             if trigger.value == value:
                 return trigger
-        raise ValueError(f"Unknown trigger type: {value}")
+        return None
