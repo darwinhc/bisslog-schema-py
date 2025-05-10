@@ -35,6 +35,47 @@ Each service can define:
 
 Service metadata can be loaded dynamically from external YAML or JSON files.
 
+**Example of Service Definition:**
+
+The following example illustrates a service definition with its use cases and external interactions:
+![service-definition-example-image](docs/assets/bisslog-schema-service-example-image.jpg)
+
+This is the YAML representation of the service definition:
+```yaml
+---
+name: "user management"
+type: "microservice"
+description: "Handles creation, update, and retrieval of user accounts in the system"
+service_type: "functional"
+team: "identity-platform"
+tags:
+  service: "user-management"
+
+use_cases:
+  registerUser:
+    name: "register user"
+    description: "Registers or creates a new user in the system"
+    actor: "end user"
+    criticality: "high"
+    type: "create functional data"
+    triggers:
+      - type: "http"
+        options:
+          route: "/user"
+          method: "post"
+          apigw: "customer-public"
+          mapper:
+            body: user_data
+    external_interactions:
+      - keyname: users_division
+        type_interaction: "database"
+        operation: "create_user"
+    tags:
+      accessibility: "public"
+
+```
+
+
 ---
 
 ### UseCaseInfo
@@ -49,6 +90,7 @@ The `UseCaseInfo` class represents a use case belonging to a service, with the f
 - `criticality`: Business importance of the use case, represented as a `CriticalityEnum`.
 - `tags`: Metadata tags for further classification.
 - `triggers`: List of `TriggerInfo` entries defining how the use case is triggered.
+- `external_interactions`: List of `ExternalInteraction` Represents any external systems or APIs this use case depends on or interacts with.
 
 ---
 
@@ -63,6 +105,33 @@ Available trigger types (enumerated by `TriggerEnum`) include:
 - `Schedule`: Time-based scheduled triggers.
 
 Each trigger may have associated options (e.g., route, method, authenticator).
+
+---
+
+### ExternalInteraction
+
+### ExternalInteraction
+
+The `ExternalInteraction` class represents an external interaction in the system, such as database access or external service calls.
+
+- `keyname`: Unique identifier for the interaction. For example, `marketing_division`.
+- `type_interaction`: String representing the type of interaction (optional). For example, `database`.
+- `operation`: Specific operation or action being performed (optional). For example, `get_last_sales_from_client`.
+- `type_interaction_standard`: Standardized type of interaction resolved from `type_interaction` using aliases (optional).
+
+
+**Example of External Interaction:**
+
+![external-interaction-example-image](docs/assets/bisslog-schema-external-interaction-image.jpg)
+
+```yaml
+use_cases:
+  addEventAdmitted:
+    external_interactions:
+        - keyname: "marketing_division"
+          type_interaction: "database"
+          operation: "get_last_sales_from_client"
+```
 
 ---
 
@@ -116,20 +185,24 @@ tags:
   service: "webhook-receptor"
 
 use_cases:
-  - keyname: "notifyEventFromWebhookDynamicPlatform"
-    name: "notify external event from external platform"
-    description: "Receives and transforms external events into internal company events"
-    actor: "external platform"
-    type: "transfer data"
-    criticality: "high"
+  addEventAdmitted:
+    name: "add event type admitted to platform"
+    description: "Updates adding event type admitted to platform if not exists, otherwise updates"
     triggers:
       - type: "http"
         options:
+          route: "/webhook/event-type-admitted/{uid}"
+          apigw: "internal"
+          authenticator: "employee"
           method: "post"
-          route: "/webhook-receptor/{platform}/{token}"
-          apigw: "webhook-receptor"
-    tags:
-      accessibility: "private"
+          mapper:
+            path_query.uid: uid
+            body: data
+            headers.user: creator
+    external_interactions:
+        - keyname: "marketing_division"
+          type_interaction: "database"
+          operation: "get_last_sales_from_client"
   # More use cases...
 ~~~
     Note: The criticality field can use either named levels (e.g., "high") or direct numeric values (e.g., 90).
@@ -144,10 +217,21 @@ use_cases:
 
 - **Integration-friendly:** Can be used for CI/CD validation or automated documentation generation.
 
-## Future Improvements
+## 🧪 Running library tests
 
-- Validation of a metadata structure against a schema.
+To Run test with coverage
+~~~cmd
+coverage run --source=bisslog_schema -m pytest tests/
+~~~
 
-- Additional trigger option models (authentication, caching, timeouts).
 
-- Support for linking external specifications (e.g., OpenAPI, AsyncAPI).
+To generate report
+~~~cmd
+coverage html && open htmlcov/index.html
+~~~
+
+
+## 📜 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+

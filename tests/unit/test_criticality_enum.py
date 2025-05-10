@@ -1,4 +1,4 @@
-from bisslog_schema.enums.criticality_enum import CriticalityEnum
+from bisslog_schema.enums.criticality import CriticalityEnum
 
 
 def test_get_from_int_val_invalid():

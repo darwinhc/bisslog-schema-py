@@ -1,9 +1,5 @@
 """
 Defines event delivery semantics used across the application.
-
-This module provides enumerations for describing how events
-should be delivered in distributed systems, focusing on 
-reliability and duplication guarantees.
 """
 
 from enum import Enum
@@ -12,8 +8,7 @@ _value_to_member_map_ = {}
 
 
 class EventDeliverySemantic(Enum):
-    """
-    Defines the delivery semantics for event transmission.
+    """Defines the delivery semantics for event transmission.
 
     Attributes
     ----------
@@ -31,15 +26,13 @@ class EventDeliverySemantic(Enum):
 
     def __new__(cls, value):
         obj = object.__new__(cls)
-        obj._value_ = value
-        # Durante la creación de cada miembro, guardamos en el mapa
+        obj.val = value
         _value_to_member_map_[value] = obj
         return obj
 
     @classmethod
     def from_value(cls, value: str) -> "EventDeliverySemantic":
-        """
-        Returns the corresponding EventDeliverySemantic member for a given value.
+        """Returns the corresponding EventDeliverySemantic member for a given value.
 
         Parameters
         ----------

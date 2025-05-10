@@ -6,12 +6,14 @@ on:
       - qa
     paths:
       - "bisslog_schema/**"
+      - "pyproject.toml"
 
   push:
     branches:
       - qa
     paths:
       - "bisslog_schema/**"
+      - "pyproject.toml"
 
 jobs:
   run-changes-reception:

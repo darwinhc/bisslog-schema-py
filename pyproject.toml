@@ -10,7 +10,7 @@ readme = "README.md"
 authors = [
     {name = "Darwin Stiven Herrera Cartagena", email = "darwinsherrerac@gmail.com"}
 ]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 dependencies = []
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -25,3 +25,6 @@ include = ["bisslog_schema", "bisslog_schema.*"]
 [tool.setuptools_scm]
 version_scheme = "post-release"
 local_scheme = "no-local-version"
+
+[project.optional-dependencies]
+yaml = ["PyYAML>=6.0"]
