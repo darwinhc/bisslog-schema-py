@@ -98,13 +98,15 @@ class TriggerHttp(TriggerOptions, TriggerMappable):
         if value is None:
             if allow_none:
                 return value
-            else:
-                raise TypeError(f"The '{field_name}' field is required and cannot be None.")
+            raise TypeError(f"The '{field_name}' field is"
+                            f" required and cannot be None.")
         if not isinstance(value, expected_type):
-            raise TypeError(f"The '{field_name}' field must be of type {expected_type.__name__}.")
+            raise TypeError(f"The '{field_name}' field must"
+                            f" be of type {expected_type.__name__}.")
         if item_type and isinstance(value, list):
             if not all(isinstance(item, item_type) for item in value):
-                raise TypeError(f"All items in '{field_name}' must be of type {item_type.__name__}.")
+                raise TypeError(f"All items in '{field_name}' "
+                                f"must be of type {item_type.__name__}.")
         return value
 
     @staticmethod
@@ -115,7 +117,8 @@ class TriggerHttp(TriggerOptions, TriggerMappable):
         if isinstance(rate_limit, str):
             if not re.fullmatch(r"\d+r/[sm]", rate_limit):
                 raise ValueError(
-                    f"Invalid rate_limit format: '{rate_limit}'. Use formats like '100r/s' or '200r/m'."
+                    f"Invalid rate_limit format: '{rate_limit}'. "
+                    "Use formats like '100r/s' or '200r/m'."
                 )
         elif not isinstance(rate_limit, int):
             raise TypeError("The 'rate_limit' field must be a string or an integer.")

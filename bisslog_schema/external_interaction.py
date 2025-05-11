@@ -30,7 +30,8 @@ class ExternalInteraction:
     type_interaction_standard: Optional[TypeExternalInteraction] = None
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any], keyname: Optional[str] = None) -> "ExternalInteraction":
+    def from_dict(cls, data: Dict[str, Any],
+                  keyname: Optional[str] = None) -> "ExternalInteraction":
         """
         Deserialize a dictionary into an ExternalInteraction instance.
 
@@ -48,15 +49,15 @@ class ExternalInteraction:
         """
         keyname = cls._validate_keyname(data, keyname)
         operation = cls._validate_operation(data.get("operation"))
-        type_interaction, type_interaction_standard = cls._process_type_interaction(data.get("type_interaction"))
+        type_int, type_int_standard = cls._get_type_interaction(data.get("type_interaction"))
         description = data.get("description") or data.get("desc")
 
         return cls(
             keyname=keyname,
-            type_interaction=type_interaction,
+            type_interaction=type_int,
             operation=operation,
             description=description,
-            type_interaction_standard=type_interaction_standard
+            type_interaction_standard=type_int_standard
         )
 
     @staticmethod
@@ -80,7 +81,8 @@ class ExternalInteraction:
         return operation
 
     @staticmethod
-    def _process_type_interaction(type_interaction: Optional[str]) -> Tuple[Optional[str], Optional[TypeExternalInteraction]]:
+    def _get_type_interaction(type_interaction: Optional[str])\
+            -> Tuple[Optional[str], Optional[TypeExternalInteraction]]:
         """Processes and resolves the type_interaction field."""
         type_interaction_standard = None
         if type_interaction is not None:

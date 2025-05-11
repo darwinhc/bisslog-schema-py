@@ -50,12 +50,14 @@ class TriggerInfo:
         options = data.get("options", {})
 
         if not isinstance(options, (dict, TriggerOptions)):
-            raise TypeError("The 'options' field must be a dictionary or an instance of TriggerOptions.")
+            raise TypeError("The 'options' field must be a dictionary "
+                            "or an instance of TriggerOptions.")
 
         if trigger_type is not None and trigger_type.cls and isinstance(options, dict):
             try:
                 options = trigger_type.cls.from_dict(options)
             except Exception as e:
-                raise ValueError(f"Error parsing options for trigger type '{trigger_type}': {e}") from e
+                raise ValueError("Error parsing options for trigger"
+                                 f" type '{trigger_type}': {e}") from e
 
         return TriggerInfo(type=trigger_type, options=options)
