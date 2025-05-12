@@ -2,7 +2,7 @@ from typing import List
 from unittest.mock import patch
 from bisslog_schema.commands.analyze_metadata_file.analyze_metadata import analyze_command, generate_report, print_and_generate_summary
 from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
-
+import re
 
 errors_string = """ServiceInfo 'unknown' error: The 'name' field is required and must be a non-empty string.
 ServiceInfo 'unknown' error: The 'description' field must be a string if provided.
@@ -14,7 +14,7 @@ TriggerWebsocket 'websocket-test' on use case 'notifyEventFromWebhookDynamicPlat
 TriggerSchedule 'schedule-test' on use case 'notifyEventFromWebhookDynamicPlatform' error: The 'cronjob' must be a string.
 TriggerConsumer 'consumer-test' on use case 'notifyEventFromWebhookDynamicPlatform' error: The 'queue' field is required and must be a string.
 TriggerConsumer 'consumer-test' on use case 'notifyEventFromWebhookDynamicPlatform' error: The 'partition' field must be a string if provided.
-TriggerConsumer 'consumer-test' on use case 'notifyEventFromWebhookDynamicPlatform' error: TriggerConsumer.validate_delivery_semantic() takes 2 positional arguments but 3 were given
+TriggerConsumer 'consumer-test' on use case 'notifyEventFromWebhookDynamicPlatform' error: Invalid 'delivery_semantic' value. Must be one of: ['at-most-once', 'at-least-once', 'exactly-once'].
 TriggerConsumer 'consumer-test' on use case 'notifyEventFromWebhookDynamicPlatform' error: The 'max_retries' field must be greater or equal than 0
 ExternalInteraction 'notifyEventFromWebhookDynamicPlatform' error: The 'operation' must be a string or a list of strings.
 ExternalInteraction 'notifyEventFromWebhookDynamicPlatform' error: The 'type_interaction' field must be a string if provided.
@@ -54,7 +54,10 @@ def get_all_warnings(self: MetadataAnalysisReport) -> List[str]:
 def test_analyze_metadata():
     """Tests the analyze_metadata function."""
 
-    metadata_analysis_report = generate_report("./examples/webhook-wrong.yml", encoding="utf-8")
+    for error in errors_string:
+        assert not re.match(r"takes \d+ positional arguments but \d+ were given", error), "Error in validations analysis"
+
+    metadata_analysis_report = generate_report("examples/webhook-wrong.yml", encoding="utf-8")
     summary = print_and_generate_summary(metadata_analysis_report)
 
     errors_collected = get_all_errors(metadata_analysis_report)

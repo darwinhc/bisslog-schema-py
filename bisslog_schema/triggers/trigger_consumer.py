@@ -12,8 +12,7 @@ expected_keys = ("event", "context")
 
 @dataclass
 class TriggerConsumer(TriggerOptions, TriggerMappable):
-    """
-    Options for configuring a consumer trigger (e.g., queue consumer).
+    """Options for configuring a consumer trigger (e.g., queue consumer).
 
     Attributes
     ----------
@@ -40,8 +39,8 @@ class TriggerConsumer(TriggerOptions, TriggerMappable):
     dead_letter_queue: Optional[str] = None
     batch_size: Optional[int] = None
 
-    @classmethod
-    def validate_delivery_semantic(cls, delivery_semantic: Any) -> EventDeliverySemantic:
+    @staticmethod
+    def _validate_delivery_semantic(delivery_semantic: Any) -> EventDeliverySemantic:
         """
         Validate the `delivery_semantic` field.
 
@@ -75,8 +74,7 @@ class TriggerConsumer(TriggerOptions, TriggerMappable):
     @classmethod
     def analyze(cls, data: Dict[str, Any], trigger_keyname: str,
                 use_case_name: str)  -> MetadataAnalysisReport:
-        """
-        Analyze the trigger consumer options.
+        """Analyze the trigger consumer options.
 
         Parameters
         ----------
@@ -97,7 +95,7 @@ class TriggerConsumer(TriggerOptions, TriggerMappable):
         validations = [
             (cls._validate_required_str_field, "queue", data.get("queue")),
             (cls._validate_optional_str_field, "partition", data.get("partition")),
-            (cls.validate_delivery_semantic, "delivery_semantic", data.get("delivery_semantic")),
+            (cls._validate_delivery_semantic, data.get("delivery_semantic")),
             (cls._validate_optional_int_field, "max_retries", data.get("max_retries"), 0),
             (cls._validate_optional_int_field, "retry_delay", data.get("retry_delay"), 0),
             (cls._validate_optional_str_field, "dead_letter_queue", data.get("dead_letter_queue")),
@@ -129,7 +127,7 @@ class TriggerConsumer(TriggerOptions, TriggerMappable):
         return cls(
             queue=cls._validate_required_str_field("queue", data.get("queue")),
             partition=cls._validate_optional_str_field("partition", data.get("partition")),
-            delivery_semantic=cls.validate_delivery_semantic(data.get("delivery_semantic")),
+            delivery_semantic=cls._validate_delivery_semantic(data.get("delivery_semantic")),
             max_retries=cls._validate_optional_int_field("max_retries", data.get("max_retries"), 0),
             retry_delay=cls._validate_optional_int_field("retry_delay", data.get("retry_delay"), 0),
             dead_letter_queue=cls._validate_optional_str_field(
