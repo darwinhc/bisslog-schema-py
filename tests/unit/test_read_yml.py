@@ -1,10 +1,11 @@
+import importlib
 from unittest import mock
+from unittest.mock import patch, MagicMock
 
 import pytest
 
 from bisslog_schema.enums.criticality import CriticalityEnum
 from bisslog_schema.read_metadata import read_service_metadata
-
 
 def test_read_yml_webhook_example():
     service_data = read_service_metadata("examples/webhook.yml")
@@ -33,9 +34,7 @@ def test_read_yml_not_found_non_defined_path():
         read_service_metadata()
 
 
-@pytest.mark.parametrize("path_option", [
-    "examples/webhook.yml",  # Usamos la ruta predeterminada modificada
-])
+@pytest.mark.parametrize("path_option", ["examples/webhook.yml"])
 def test_read_service_metadata(path_option):
     with mock.patch("bisslog_schema.read_metadata.default_path_options", (path_option,)):
         service_data = read_service_metadata()
@@ -45,3 +44,25 @@ def test_read_service_metadata(path_option):
         assert service_data.team == "code-infrastructure"
 
         assert service_data.use_cases["getWebhookEventType"].criticality == CriticalityEnum.VERY_HIGH
+
+
+
+def test_yaml_import_error_handling(capsys):
+    """Test YAML import error handling with full message verification.
+
+    Verifies
+    --------
+    - Correct error message is displayed
+    - Installation instructions are included
+    - Error is properly propagated
+    """
+    with patch('importlib.import_module') as mock_import:
+        mock_import.side_effect = ImportError("No module named 'yaml'")
+
+        with pytest.raises(ImportError):
+            read_service_metadata("examples/webhook.yml")
+
+        captured = capsys.readouterr()
+        assert "Please install PyYAML" in captured.err
+        assert "pip install bisslog_schema[yaml]" in captured.err
+        assert "pip install pyyaml" in captured.err
