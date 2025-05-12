@@ -28,3 +28,4 @@ local_scheme = "no-local-version"
 
 [project.optional-dependencies]
 yaml = ["PyYAML>=6.0"]
+timezone = ["backports.zoneinfo>=0.2.1; python_version<'3.9'"]

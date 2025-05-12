@@ -15,6 +15,96 @@ You can install `bisslog-schema` using **pip**:
 pip install bisslog_schema
 ```
 
+For YAML support, you may also need to install `PyYAML`:
+
+```bash 
+pip install bisslog_schema[yaml]
+```
+
+or 
+
+```bash
+pip install pyyaml
+```
+
+---
+## Example YAML for Service Definition
+
+Here is an example of how to define a service and its use cases using YAML:
+
+~~~yaml
+---
+name: "webhook receiver"
+type: "microservice"
+description: "Receives events from external platforms and converts them into company events for internal processing"
+service_type: "functional"
+team: "code-infrastructure"
+tags:
+  service: "webhook-receptor"
+
+use_cases:
+  addEventAdmitted:
+    name: "add event type admitted to platform"
+    description: "Updates adding event type admitted to platform if not exists, otherwise updates"
+    triggers:
+      - type: "http"
+        options:
+          route: "/webhook/event-type-admitted/{uid}"
+          apigw: "internal"
+          authenticator: "employee"
+          method: "post"
+          mapper:
+            path_query.uid: uid
+            body: data
+            headers.user: creator
+    external_interactions:
+        - keyname: "marketing_division"
+          type_interaction: "database"
+          operation: "get_last_sales_from_client"
+  # More use cases...
+~~~
+
+Note: The criticality field can use either named levels (e.g., "high") or direct numeric values (e.g., 90).
+
+
+---
+## 🔧 CLI Usage
+
+Validate metadata files through the command line, ensuring they conform to the expected schema.
+
+```yaml
+bisslog_schema analyze_metadata service.yaml --format-file yaml
+```
+
+### Options
+- `--path`: Specify the path to the metadata file. If not provided, it will search in the default locations.
+- `--format-file`: Specify the format of the metadata file. Supported formats are `yaml` and `json`. Default is `yaml`.
+- `--encoding`: File encoding (default: utf-8)
+- `--min-warnings`: Minimum warning percentage (optional)
+
+
+---
+
+## 💻 Loading Service Metadata
+
+You can load service definitions from YAML or JSON files using the `read_service_metadata` function.  
+It automatically searches for metadata files in predefined locations if a path is not provided.
+
+You can specify the path to the metadata file as an argument or as an environment variable in `SERVICE_METADATA_PATH`.
+
+### Example
+
+```python
+from bisslog_schema.read_metadata import read_service_metadata
+
+service_info = read_service_metadata()
+print(service_info.name)
+for use_case_keyname, use_case in service_info.use_cases.items():
+    print(f"{use_case.keyname}: {use_case.name}")
+```
+
+
+
 
 ---
 
@@ -25,19 +115,20 @@ pip install bisslog_schema
 The `ServiceInfo` class models a service in the system.  
 Each service can define:
 
-- `name`: Name of the service.
-- `description`: A short explanation of the service's responsibility.
-- `type`: Logical category (e.g., "microservice", "library", etc.).
-- `service_type`: Type of service (e.g., "functional", "technical").
-- `team`: The responsible or owning team.
-- `tags`: Arbitrary metadata tags for classification.
-- `use_cases`: A list of `UseCaseInfo` objects representing the service's use cases.
+- `name`: Service name
+- `description`: Brief explanation of the service's responsibility
+- `type`: Logical category (e.g., "microservice", "library")
+- `service_type`: Service type (e.g., "functional", "technical")
+- `team`: Responsible team
+- `tags`: Arbitrary metadata tags for classification
+- `use_cases`: List of `UseCaseInfo` objects representing the service's use cases
 
 Service metadata can be loaded dynamically from external YAML or JSON files.
 
-**Example of Service Definition:**
+**Service Definition Example:**
 
 The following example illustrates a service definition with its use cases and external interactions:
+
 ![service-definition-example-image](docs/assets/bisslog-schema-service-example-image.jpg)
 
 This is the YAML representation of the service definition:
@@ -151,61 +242,6 @@ use_cases:
 
 This scale helps prioritize use cases based on their business or operational impact.
 
----
-
-## Loading Service Metadata
-
-You can load service definitions from YAML or JSON files using the `read_service_metadata` function.  
-It automatically searches for metadata files in predefined locations if a path is not provided.
-
-Example:
-
-```python
-from bisslog_schema.metadata import read_service_metadata
-
-service_info = read_service_metadata()
-print(service_info.name)
-for use_case in service_info.use_cases:
-    print(f"{use_case.keyname}: {use_case.name}")
-```
-
-
-## Example YAML for Service Definition
-
-Here is an example of how to define a service and its use cases using YAML:
-
-~~~yaml
----
-name: "webhook receiver"
-type: "microservice"
-description: "Receives events from external platforms and converts them into company events for internal processing"
-service_type: "functional"
-team: "code-infrastructure"
-tags:
-  service: "webhook-receptor"
-
-use_cases:
-  addEventAdmitted:
-    name: "add event type admitted to platform"
-    description: "Updates adding event type admitted to platform if not exists, otherwise updates"
-    triggers:
-      - type: "http"
-        options:
-          route: "/webhook/event-type-admitted/{uid}"
-          apigw: "internal"
-          authenticator: "employee"
-          method: "post"
-          mapper:
-            path_query.uid: uid
-            body: data
-            headers.user: creator
-    external_interactions:
-        - keyname: "marketing_division"
-          type_interaction: "database"
-          operation: "get_last_sales_from_client"
-  # More use cases...
-~~~
-    Note: The criticality field can use either named levels (e.g., "high") or direct numeric values (e.g., 90).
 
 ## Why use bisslog-schema-py?
 
@@ -220,6 +256,7 @@ use_cases:
 ## 🧪 Running library tests
 
 To Run test with coverage
+
 ~~~cmd
 coverage run --source=bisslog_schema -m pytest tests/
 ~~~

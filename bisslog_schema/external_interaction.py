@@ -5,11 +5,13 @@ in a system, such as database access or external service calls.
 from dataclasses import dataclass
 from typing import Optional, Any, Dict, Union, Tuple, List
 
+from bisslog_schema.base_obj_schema import BaseObjSchema
+from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 from bisslog_schema.enums.type_external_interaction import TypeExternalInteraction
 
 
 @dataclass
-class ExternalInteraction:
+class ExternalInteraction(BaseObjSchema):
     """Represents a single external interaction, including its type, operation,
     and a standardized interaction type if resolvable.
 
@@ -30,7 +32,63 @@ class ExternalInteraction:
     type_interaction_standard: Optional[TypeExternalInteraction] = None
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any], keyname: Optional[str] = None) -> "ExternalInteraction":
+    def analyze(cls, data: Dict[str, Any], keyname: Optional[str] = None) -> MetadataAnalysisReport:
+        """
+        Validate the provided data against the ServiceInfo schema.
+
+        Parameters
+        ----------
+        data : dict
+            The data to validate.
+        keyname : str, optional
+            Keyname for the interaction.
+
+        Returns
+        -------
+        MetadataAnalysisReport
+            The summary of the analysis
+
+        Raises
+        ------
+        ValueError
+            If validation fails.
+        """
+
+        validations = [
+            (lambda x: cls._validate_required_str_field("keyname", x),
+             "keyname", data.get("keyname") or keyname),
+            (cls._validate_operation, "operation", data.get("operation")),
+            (lambda x: cls._validate_optional_str_field("description", x),
+             "description", data.get("description")),
+            (lambda x: cls._validate_optional_str_field("type_interaction", x),
+             "type_interaction", data.get("type_interaction")),
+
+        ]
+
+        warnings = []
+        errors = []
+
+        validated_data = {}
+        for func, field_name, *args in validations:
+            try:
+                validated_data[field_name] = func(*args)
+            except (TypeError, ValueError) as e:
+                msg = (f"ExternalInteraction '{keyname}' error: "
+                       f"{e.args[0]}")
+                errors.append(msg)
+
+        type_interaction = validated_data.get("type_interaction")
+        type_interaction_standard = TypeExternalInteraction.from_str(type_interaction) is None
+        if type_interaction is not None and type_interaction_standard:
+            warnings.append(f"ExternalInteraction '{keyname}' warning: "
+                            f"The 'type_interaction' field is not standard.")
+
+
+        return MetadataAnalysisReport(len(validations), 1, errors, warnings, {})
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any],
+                  keyname: Optional[str] = None) -> "ExternalInteraction":
         """
         Deserialize a dictionary into an ExternalInteraction instance.
 
@@ -46,28 +104,14 @@ class ExternalInteraction:
         ExternalInteraction
             An instance of ExternalInteraction.
         """
-        keyname = cls._validate_keyname(data, keyname)
+        keyname = cls._validate_required_str_field("keyname", data.get("keyname") or keyname)
         operation = cls._validate_operation(data.get("operation"))
-        type_interaction, type_interaction_standard = cls._process_type_interaction(data.get("type_interaction"))
-        description = data.get("description") or data.get("desc")
+        type_int, type_int_standard = cls._get_type_interaction(data.get("type_interaction"))
+        description = cls._validate_optional_str_field(
+            "description", data.get("description") or data.get("desc"))
 
-        return cls(
-            keyname=keyname,
-            type_interaction=type_interaction,
-            operation=operation,
-            description=description,
-            type_interaction_standard=type_interaction_standard
-        )
-
-    @staticmethod
-    def _validate_keyname(data: Dict[str, Any], keyname: Optional[str]) -> str:
-        """Validates and returns the keyname."""
-        if not keyname and "keyname" not in data:
-            raise ValueError("The 'keyname' field is required.")
-        keyname = keyname or data["keyname"]
-        if not isinstance(keyname, str):
-            raise TypeError("The 'keyname' must be a string.")
-        return keyname
+        return cls(keyname=keyname, type_interaction=type_int, operation=operation,
+                   description=description, type_interaction_standard=type_int_standard)
 
     @staticmethod
     def _validate_operation(operation: Any) -> Optional[Union[str, List[str]]]:
@@ -79,10 +123,13 @@ class ExternalInteraction:
             raise TypeError("The 'operation' must be a string or a list of strings.")
         return operation
 
-    @staticmethod
-    def _process_type_interaction(type_interaction: Optional[str]) -> Tuple[Optional[str], Optional[TypeExternalInteraction]]:
+    @classmethod
+    def _get_type_interaction(cls, type_interaction: Optional[str])\
+            -> Tuple[Optional[str], Optional[TypeExternalInteraction]]:
         """Processes and resolves the type_interaction field."""
         type_interaction_standard = None
+        cls._validate_optional_str_field(
+            "type_interaction", type_interaction)
         if type_interaction is not None:
             type_interaction_standard = TypeExternalInteraction.from_str(type_interaction)
         return type_interaction, type_interaction_standard
