@@ -31,7 +31,7 @@ def test_trigger_schedule_missing_cronjob():
 def test_trigger_schedule_invalid_cronjob():
     """Tests that an invalid 'cronjob' value raises a ValueError."""
     data = {"cronjob": 123}
-    with pytest.raises(ValueError, match="The 'cronjob' field is required and must be a string."):
+    with pytest.raises(TypeError, match="The 'cronjob' must be a string."):
         TriggerSchedule.from_dict(data)
 
 
@@ -59,5 +59,5 @@ def test_trigger_schedule_invalid_retry_policy():
 def test_trigger_schedule_invalid_max_attempts():
     """Tests that a negative 'max_attempts' value raises a ValueError."""
     data = {"cronjob": "0 0 * * *", "max_attempts": -1}
-    with pytest.raises(ValueError, match="The 'max_attempts' field must be a non-negative integer if provided."):
+    with pytest.raises(ValueError, match="The 'max_attempts' field must be greater or equal than 0"):
         TriggerSchedule.from_dict(data)

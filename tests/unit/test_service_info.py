@@ -4,7 +4,7 @@ from bisslog_schema.use_case_info import UseCaseInfo
 
 
 def test_service_info_valid_data():
-    """Prueba la creación de una instancia de ServiceInfo con datos válidos."""
+    """Tests the creation of a ServiceInfo instance with valid data."""
     data = {
         "name": "OrderService",
         "description": "Handles order processing",
@@ -32,7 +32,7 @@ def test_service_info_valid_data():
 
 
 def test_service_info_missing_name():
-    """Prueba que falte el campo 'name' lanza un ValueError."""
+    """Tests that missing the 'name' field raises a ValueError."""
     data = {
         "description": "Handles order processing",
         "tags": {"domain": "ecommerce"}
@@ -42,7 +42,7 @@ def test_service_info_missing_name():
 
 
 def test_service_info_invalid_tags():
-    """Prueba que un campo 'tags' inválido lanza un ValueError."""
+    """Tests that an invalid 'tags' field raises a ValueError."""
     data = {
         "name": "OrderService",
         "tags": "invalid_tags"
@@ -52,7 +52,7 @@ def test_service_info_invalid_tags():
 
 
 def test_service_info_invalid_use_cases():
-    """Prueba que un campo 'use_cases' inválido lanza un ValueError."""
+    """Tests that an invalid 'use_cases' field raises a ValueError."""
     data = {
         "name": "OrderService",
         "use_cases": "invalid_use_cases"
@@ -62,7 +62,7 @@ def test_service_info_invalid_use_cases():
 
 
 def test_service_info_invalid_use_case_data():
-    """Prueba que un caso de uso inválido lanza un ValueError."""
+    """Tests that invalid use case data raises a ValueError."""
     data = {
         "name": "OrderService",
         "use_cases": {
@@ -74,14 +74,14 @@ def test_service_info_invalid_use_case_data():
 
 
 def test_service_info_use_case_creation_error():
-    """Prueba que un error al crear un UseCaseInfo lanza un ValueError."""
+    """Tests that an error when creating a UseCaseInfo raises a ValueError."""
     data = {
         "name": "OrderService",
         "use_cases": {
             "create_order": {
-                "name": 123  # Valor inválido para el nombre
+                "name": 123  # Invalid value for the name
             }
         }
     }
-    with pytest.raises(ValueError, match="Error creating UseCaseInfo for 'create_order':"):
+    with pytest.raises(ValueError, match="Error creating UseCaseInfo for 'create_order': The 'name' must be a string."):
         ServiceInfo.from_dict(data)

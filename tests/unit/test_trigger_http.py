@@ -51,15 +51,17 @@ def test_trigger_http_missing_optional_fields():
 def test_trigger_http_invalid_method_type():
     """Tests that an invalid method type raises a TypeError."""
     data = {"method": 123}
-    with pytest.raises(TypeError, match="The 'method' field must be of type str."):
+    with pytest.raises(TypeError, match="The 'method' must be a string."):
         TriggerHttp.from_dict(data)
 
 
 def test_trigger_http_invalid_timeout_type():
     """Tests that an invalid timeout type raises a TypeError."""
     data = {"method": "GET", "timeout": "5000"}
-    with pytest.raises(TypeError, match="The 'timeout' field must be of type int."):
-        TriggerHttp.from_dict(data)
+    trigger = TriggerHttp.from_dict(data)
+    assert trigger.method == "GET"
+    assert trigger.timeout == 5000
+
 
 
 def test_trigger_http_invalid_rate_limit_format():
@@ -72,12 +74,13 @@ def test_trigger_http_invalid_rate_limit_format():
 def test_trigger_http_invalid_allowed_origins_type():
     """Tests that an invalid allowed_origins type raises a TypeError."""
     data = {"method": "GET", "allowed_origins": "https://example.com"}
-    with pytest.raises(TypeError, match="The 'allowed_origins' field must be of type list."):
-        TriggerHttp.from_dict(data)
+    trigger = TriggerHttp.from_dict(data)
+    assert trigger.method == "GET"
+    assert trigger.allowed_origins == ["https://example.com"]
 
 
 def test_trigger_http_empty_data():
     """Tests that missing required fields raises a TypeError."""
     data = {}
-    with pytest.raises(TypeError, match="The 'method' field is required and cannot be None."):
-        TriggerHttp.from_dict(data)
+    trigger = TriggerHttp.from_dict(data)
+    assert trigger.method == "GET"

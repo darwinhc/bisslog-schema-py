@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from typing import Optional, Dict, Any
 
+from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+
 try:
     from zoneinfo import available_timezones
     _ZONE_INFO_AVAILABLE = True
@@ -43,30 +45,6 @@ class TriggerSchedule(TriggerOptions):
     description: Optional[str] = None
     retry_policy: Optional[str] = None
     max_attempts: Optional[int] = None
-
-    @classmethod
-    def validate_cronjob(cls, cronjob: Any) -> str:
-        """
-        Validate the `cronjob` field.
-
-        Parameters
-        ----------
-        cronjob : Any
-            The cronjob value to validate.
-
-        Returns
-        -------
-        str
-            The validated cronjob value.
-
-        Raises
-        ------
-        ValueError
-            If the cronjob is not a valid string.
-        """
-        if not cronjob or not isinstance(cronjob, str):
-            raise ValueError("The 'cronjob' field is required and must be a string.")
-        return cronjob
 
     @classmethod
     def validate_timezone(cls, timezone: Any) -> str:
@@ -114,87 +92,46 @@ class TriggerSchedule(TriggerOptions):
         ValueError
             If the timezone is not recognized.
         """
-        if _ZONE_INFO_AVAILABLE:
-            if timezone not in available_timezones():
-                raise ValueError(f"Invalid timezone string: {timezone}")
+        if _ZONE_INFO_AVAILABLE and timezone not in available_timezones():
+            raise ValueError(f"Invalid timezone string: {timezone}")
         return timezone
 
+
     @classmethod
-    def validate_description(cls, description: Any) -> Any:
+    def analyze(cls, data: Dict[str, Any], trigger_keyname: str,
+                use_case_name: str) -> MetadataAnalysisReport:
         """
-        Validate the `description` field.
+        Analyze the trigger Schedule options.
 
         Parameters
         ----------
-        description : Any
-            The description value to validate.
+        data : dict
+            Dictionary containing the trigger options.
+        trigger_keyname : str
+            The key name of the trigger in the use case configuration.
+        use_case_name
+            The name of the use case for which the trigger options are being analyzed.
 
         Returns
         -------
-        Any
-            The validated description value.
-
-        Raises
-        ------
-        ValueError
-            If the description is not a valid string.
+        MetadataAnalysisReport
+            Analysis report for the trigger schedule.
         """
-        if description is not None and not isinstance(description, str):
-            raise ValueError("The 'description' field must be a string if provided.")
-        return description
+        validations = [
+            (cls._validate_required_str_field, "cronjob", data.get("cronjob")),
+            (cls.validate_timezone, data.get("timezone")),
+            (cls._validate_optional_str_field, "description", data.get("description")),
+            (cls._validate_optional_str_field, "retry_policy", data.get("retry_policy")),
+            (cls._validate_optional_int_field, "max_attempts", data.get("max_attempts"), 0),
+        ]
 
-    @classmethod
-    def validate_retry_policy(cls, retry_policy: Any) -> Any:
-        """
-        Validate the `retry_policy` field.
+        errors = cls._run_validations(trigger_keyname, use_case_name, validations)
 
-        Parameters
-        ----------
-        retry_policy : Any
-            The retry policy value to validate.
-
-        Returns
-        -------
-        Any
-            The validated retry policy value.
-
-        Raises
-        ------
-        ValueError
-            If the retry policy is not a valid string.
-        """
-        if retry_policy is not None and not isinstance(retry_policy, str):
-            raise ValueError("The 'retry_policy' field must be a string if provided.")
-        return retry_policy
-
-    @classmethod
-    def validate_max_attempts(cls, max_attempts: Any) -> Any:
-        """
-        Validate the `max_attempts` field.
-
-        Parameters
-        ----------
-        max_attempts : Any
-            The max attempts value to validate.
-
-        Returns
-        -------
-        Any
-            The validated max attempts value.
-
-        Raises
-        ------
-        ValueError
-            If the max attempts is not a non-negative integer.
-        """
-        if max_attempts is not None and (not isinstance(max_attempts, int) or max_attempts < 0):
-            raise ValueError("The 'max_attempts' field must be a non-negative integer if provided.")
-        return max_attempts
+        return MetadataAnalysisReport(len(validations), 0, errors, [], {})
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "TriggerSchedule":
-        """
-        Deserialize a dictionary into a TriggerSchedule instance.
+        """Deserialize a dictionary into a TriggerSchedule instance.
 
         Parameters
         ----------
@@ -209,19 +146,12 @@ class TriggerSchedule(TriggerOptions):
         Raises
         ------
         ValueError
-            If any field fails validation.
-        """
-        cronjob = cls.validate_cronjob(data.get("cronjob"))
+            If any field fails validation."""
+        cronjob = cls._validate_required_str_field("cronjob", data.get("cronjob"))
         timezone = cls.validate_timezone(data.get("timezone"))
-        description = cls.validate_description(data.get("description"))
-        retry_policy = cls.validate_retry_policy(data.get("retry_policy"))
-        max_attempts = cls.validate_max_attempts(data.get("max_attempts"))
+        description = cls._validate_optional_str_field("description", data.get("description"))
+        retry_policy = cls._validate_optional_str_field("retry_policy", data.get("retry_policy"))
+        max_attempts = cls._validate_optional_int_field("max_attempts", data.get("max_attempts"), 0)
 
-        return cls(
-            cronjob=cronjob,
-            event=data.get("event"),
-            timezone=timezone,
-            description=description,
-            retry_policy=retry_policy,
-            max_attempts=max_attempts,
-        )
+        return cls(cronjob=cronjob, event=data.get("event"), timezone=timezone,
+                   description=description, retry_policy=retry_policy, max_attempts=max_attempts)

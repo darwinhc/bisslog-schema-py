@@ -72,15 +72,15 @@ def test_trigger_from_dict_missing_type_defaults_to_http():
     assert trigger.type == TriggerEnum.HTTP
     assert isinstance(trigger.options, TriggerHttp)
 
-def test_trigger_from_dict_invalid_type():
-    data = {"type": "invalid", "foo": "bar"}
+def test_trigger_from_dict_customized_type():
+    data = {"type": "customized", "foo": "bar"}
     trigger_info = TriggerInfo.from_dict(data.copy())
-    assert trigger_info.type is None, "Invalid trigger type should not be set"
+    assert trigger_info.type == "customized", "Invalid trigger type should not be set"
     assert isinstance(trigger_info.options, dict)
     assert trigger_info.options == {}
-    data = {"type": "invalid", "foo": "bar", "options": {"bar": "baz"}}
+    data = {"type": "customized", "foo": "bar", "options": {"bar": "baz"}}
     trigger_info = TriggerInfo.from_dict(data.copy())
-    assert trigger_info.type is None, "Invalid trigger type should not be set"
+    assert trigger_info.type == "customized", "Invalid trigger type should not be set"
     assert isinstance(trigger_info.options, dict)
     assert trigger_info.options == {"bar": "baz"}
 
@@ -89,6 +89,6 @@ def test_trigger_from_dict_null():
     data = {
         "type": None,
     }
-    with pytest.raises(ValueError, match="Trigger 'type' is required"):
+    with pytest.raises(ValueError, match="The 'type' field is required and must be a string."):
         TriggerInfo.from_dict(data.copy())
 

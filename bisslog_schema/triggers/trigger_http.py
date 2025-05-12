@@ -5,6 +5,7 @@ from typing import Optional, Dict, Any, List, Union
 
 from .trigger_mappable import TriggerMappable
 from .trigger_options import TriggerOptions
+from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 
 expected_keys = ("path_query", "body", "params", "headers", "context")
 
@@ -54,8 +55,50 @@ class TriggerHttp(TriggerOptions, TriggerMappable):
     retry_policy: Optional[str] = None
 
     @classmethod
+    def analyze(cls, data: Dict[str, Any], trigger_keyname: str,
+                use_case_name: str) -> MetadataAnalysisReport:
+        """
+        Analyze the trigger HTTP options.
+
+        Parameters
+        ----------
+        data : dict
+            Dictionary containing the trigger options.
+        trigger_keyname : str
+            The key name of the trigger in the use case configuration.
+        use_case_name : str
+            The name of the use case for which the trigger options are being analyzed.
+
+        Returns
+        -------
+        MetadataAnalysisReport
+            A report indicating whether the trigger HTTP options are valid or not.
+        """
+        report = cls.analyze_source_prefix(data.get("mapper"), expected_keys)
+
+        validations = [
+            (cls._validate_required_str_field, "method", data.get("method")),
+            (cls._validate_optional_str_field, "authenticator", data.get("authenticator")),
+            (cls._validate_optional_str_field, "path", data.get("path")),
+            (cls._validate_optional_str_field, "apigw", data.get("apigw")),
+            (cls._validate_boolean_field, "cacheable", data.get("cacheable")),
+            (cls._validate_boolean_field, "allow_cors", data.get("allow_cors")),
+            (cls._validate_allowed_origins, data.get("allowed_origins")),
+            (cls._validate_optional_str_field, "content_type", data.get("content_type")),
+            (cls._validate_optional_int_field, "timeout", data.get("timeout"), 0),
+            (cls._validate_rate_limit, data.get("rate_limit")),
+            (cls._validate_optional_str_field, "retry_policy", data.get("retry_policy")),
+        ]
+
+        errors = cls._run_validations(trigger_keyname, use_case_name, validations)
+        report.critical_validation_count += len(validations)
+        report.errors.extend(errors)
+        return report
+
+    @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "TriggerHttp":
-        """Deserialize a dictionary into a TriggerWebsocket instance.
+        """
+        Deserialize a dictionary into a TriggerHttp instance.
 
         Parameters
         ----------
@@ -65,52 +108,39 @@ class TriggerHttp(TriggerOptions, TriggerMappable):
         Returns
         -------
         TriggerHttp
-            An instance of a subclass implementing TriggerWebsocket."""
-
-        mapper = data.get("mapper")
-        cls.verify_source_prefix(mapper, expected_keys)
-
-        method = cls._validate_field(data.get("method"), str, "method")
-        timeout = cls._validate_field(data.get("timeout"), int, "timeout", allow_none=True)
-        rate_limit = cls._validate_rate_limit(data.get("rate_limit"))
-        allowed_origins = cls._validate_field(
-            data.get("allowed_origins"), list, "allowed_origins", allow_none=True, item_type=str
-        )
-
+            An instance of TriggerHttp.
+        """
+        mapper = cls.verify_source_prefix(data.get("mapper"), expected_keys)
         return cls(
-            method=method,
+            method=cls._validate_required_str_field("method", data.get("method", "GET")),
             authenticator=data.get("authenticator"),
-            path=data.get("path"),
-            apigw=data.get("apigw"),
-            cacheable=data.get("cacheable", False),
-            allow_cors=data.get("allow_cors", False),
-            allowed_origins=allowed_origins,
+            path=cls._validate_optional_str_field("path", data.get("path")),
+            apigw=cls._validate_optional_str_field("apigw", data.get("apigw")),
+            cacheable=cls._validate_boolean_field("cacheable", data.get("cacheable")),
+            allow_cors=cls._validate_boolean_field("allow_cors", data.get("allow_cors")),
+            allowed_origins=cls._validate_allowed_origins(data.get("allowed_origins")),
             content_type=data.get("content_type"),
-            timeout=timeout,
-            rate_limit=rate_limit,
-            retry_policy=data.get("retry_policy"),
+            timeout=cls._validate_optional_int_field("timeout", data.get("timeout"), lower_limit=0),
+            rate_limit=cls._validate_rate_limit(data.get("rate_limit")),
+            retry_policy=cls._validate_optional_str_field("retry_policy", data.get("retry_policy")),
             mapper=mapper,
         )
+    @staticmethod
+    def _validate_allowed_origins(allowed_origins: Optional[Any]) -> Optional[List[str]]:
+        if allowed_origins is None:
+            return allowed_origins
+
+        if isinstance(allowed_origins, str):
+            return [origin.strip() for origin in allowed_origins.split(",")]
+
+        if (not isinstance(allowed_origins, list) or
+                not all(isinstance(item, str) for item in allowed_origins)):
+            raise TypeError("The 'allowed_origins' field must be a list of strings.")
+
+        return allowed_origins
 
     @staticmethod
-    def _validate_field(value, expected_type, field_name, allow_none=False, item_type=None):
-        """Validates a field's type and optional constraints."""
-        if value is None:
-            if allow_none:
-                return value
-            raise TypeError(f"The '{field_name}' field is"
-                            f" required and cannot be None.")
-        if not isinstance(value, expected_type):
-            raise TypeError(f"The '{field_name}' field must"
-                            f" be of type {expected_type.__name__}.")
-        if item_type and isinstance(value, list):
-            if not all(isinstance(item, item_type) for item in value):
-                raise TypeError(f"All items in '{field_name}' "
-                                f"must be of type {item_type.__name__}.")
-        return value
-
-    @staticmethod
-    def _validate_rate_limit(rate_limit):
+    def _validate_rate_limit(rate_limit: Any) -> Optional[Union[str, int]]:
         """Validates the rate_limit field."""
         if rate_limit is None:
             return None

@@ -47,7 +47,7 @@ def test_missing_trigger_type_raises_value_error():
         }
     }
 
-    with pytest.raises(ValueError, match="Trigger 'type' is required"):
+    with pytest.raises(ValueError, match="The 'type' field is required and must be a string."):
         TriggerInfo.from_dict(data)
 
 
