@@ -7,11 +7,11 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Union, Any, Dict
 from json import dumps
 
-from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
-from bisslog_schema.entity_info import EntityInfo
-from bisslog_schema.enums.criticality import CriticalityEnum
-from bisslog_schema.external_interaction import ExternalInteraction
-from bisslog_schema.triggers.trigger_info import TriggerInfo
+from .commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from .entity_info import EntityInfo
+from .enums.criticality import CriticalityEnum
+from .external_interaction import ExternalInteraction
+from .triggers.trigger_info import TriggerInfo
 
 
 @dataclass
@@ -242,7 +242,8 @@ class UseCaseInfo(EntityInfo):
                 ei_data["keyname"] = key
                 external_interactions.append(ei_data)
         else:
-            raise ValueError(f"Invalid external interactions data -> {dumps(external_interactions_data)}")
+            raise ValueError("Invalid external interactions data -> "
+                             f"{dumps(external_interactions_data)}")
         return external_interactions
 
     @classmethod

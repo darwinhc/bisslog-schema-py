@@ -8,9 +8,9 @@ from typing import Optional, Dict, Any
 
 import sys
 
-from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
-from bisslog_schema.read_metadata import read_metadata_file
-from bisslog_schema.service_info import ServiceInfo
+from .metadata_analysis_report import MetadataAnalysisReport
+from ...read_metadata import read_metadata_file
+from ...service_info import ServiceInfo
 
 
 def generate_report(path: str, *, format_file: str = "yaml",

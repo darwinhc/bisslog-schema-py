@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from typing import Optional, Dict, Any
 
-from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from ..commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 
 try:
     from zoneinfo import available_timezones

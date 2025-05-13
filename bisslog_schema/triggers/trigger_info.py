@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Dict, Any, Union, Optional
 
 from ..base_obj_schema import BaseObjSchema
-from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from ..commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 from ..enums.trigger_type import TriggerEnum
 from .trigger_options import TriggerOptions
 
@@ -87,7 +87,7 @@ class TriggerInfo(BaseObjSchema):
         keyname = data.get("keyname", f"unknown-{index_trigger}")
         validations = cls._get_validations_list(data)
         warnings = cls._check_for_warnings(data, keyname, use_case_name)
-        data_validated, errors = cls._validate_data(data, validations, keyname, use_case_name)
+        data_validated, errors = cls._validate_data(validations, keyname, use_case_name)
         sub_reports = cls._generate_sub_reports(data_validated, keyname, use_case_name)
 
         return MetadataAnalysisReport(len(validations), 1, errors, warnings, sub_reports)
@@ -114,7 +114,7 @@ class TriggerInfo(BaseObjSchema):
         return warnings
 
     @classmethod
-    def _validate_data(cls, data: Dict[str, Any], validations: list,
+    def _validate_data(cls, validations: list,
                        keyname: str, use_case_name: str) -> tuple:
         """Validate the trigger data and return validated data and errors."""
         data_validated = {}

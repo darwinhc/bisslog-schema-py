@@ -11,7 +11,7 @@ Commands
 import argparse
 import sys
 
-from bisslog_schema.commands.analyze_metadata_file.analyze_metadata import analyze_command
+from .commands.analyze_metadata_file.analyze_metadata import analyze_command
 
 
 def main():
