@@ -7,7 +7,7 @@ details such as service type, owning team, and associated use cases.
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Any
 
-from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from .commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 from .entity_info import EntityInfo
 from .use_case_info import UseCaseInfo
 
@@ -70,7 +70,8 @@ class ServiceInfo(EntityInfo):
             try:
                 func(arg)
             except (TypeError, ValueError) as e:
-                errors.append(f"ServiceInfo'{' ' + name if name is not None else ''}' error: {e.args[0]}")
+                errors.append(f"ServiceInfo'{' ' + name if name is not None else ''}'"
+                              f" error: {e.args[0]}")
         metadata_analysis_report.critical_validation_count += len(validations)
         metadata_analysis_report.errors += errors
 

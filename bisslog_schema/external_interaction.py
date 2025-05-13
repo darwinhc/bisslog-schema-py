@@ -5,9 +5,9 @@ in a system, such as database access or external service calls.
 from dataclasses import dataclass
 from typing import Optional, Any, Dict, Union, Tuple, List
 
-from bisslog_schema.base_obj_schema import BaseObjSchema
-from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
-from bisslog_schema.enums.type_external_interaction import TypeExternalInteraction
+from .base_obj_schema import BaseObjSchema
+from .commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from .enums.type_external_interaction import TypeExternalInteraction
 
 
 @dataclass

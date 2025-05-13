@@ -2,8 +2,8 @@
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Any
 
-from bisslog_schema.base_obj_schema import BaseObjSchema
-from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from .base_obj_schema import BaseObjSchema
+from .commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 
 
 @dataclass
