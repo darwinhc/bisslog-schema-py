@@ -68,7 +68,7 @@ def print_and_generate_summary(metadata_analysis_report: MetadataAnalysisReport)
     total_critical_validations = metadata_analysis_report.total_critical_validations()
     total_warning_validations = metadata_analysis_report.total_warning_validations()
 
-    print("\nReport of metadata file service")
+    print("Report of metadata file service")
     if n_errors > 0:
         print("Errors")
         metadata_analysis_report.print_errors()
