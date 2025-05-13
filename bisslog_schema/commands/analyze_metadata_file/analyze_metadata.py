@@ -69,12 +69,13 @@ def print_and_generate_summary(metadata_analysis_report: MetadataAnalysisReport)
     total_warning_validations = metadata_analysis_report.total_warning_validations()
 
     print("Report of metadata file service")
+    print("-" * 80)
     if n_errors > 0:
-        print("Errors")
+        print("Errors:")
         metadata_analysis_report.print_errors()
         print("-" * 80)
     if n_warnings > 0:
-        print("Warnings")
+        print("Warnings:")
         metadata_analysis_report.print_warnings()
         print("-" * 80)
 
