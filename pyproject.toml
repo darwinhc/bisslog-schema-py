@@ -19,6 +19,8 @@ classifiers = [
 keywords = ["hexagonal", "adapters", "bisslog"]
 [project.urls]
 Homepage = "https://github.com/darwinhc/bisslog-schema-py"
+[project.scripts]
+bisslog_schema = "bisslog_schema.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["bisslog_schema", "bisslog_schema.*"]
