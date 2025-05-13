@@ -3,6 +3,7 @@ Defines event delivery semantics used across the application.
 """
 
 from enum import Enum
+from typing import Optional
 
 _value_to_member_map_ = {}
 
@@ -31,7 +32,7 @@ class EventDeliverySemantic(Enum):
         return obj
 
     @classmethod
-    def from_value(cls, value: str) -> "EventDeliverySemantic":
+    def from_value(cls, value: str) -> Optional["EventDeliverySemantic"]:
         """Returns the corresponding EventDeliverySemantic member for a given value.
 
         Parameters
@@ -49,4 +50,4 @@ class EventDeliverySemantic(Enum):
         ValueError
             If no matching EventDeliverySemantic is found.
         """
-        return _value_to_member_map_.get(value, cls.AT_LEAST_ONCE)
+        return _value_to_member_map_.get(value)
