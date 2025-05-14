@@ -70,7 +70,7 @@ use_cases:
           authenticator: "employee"
           cacheable: 245
           timeout: "algo"
-          route: "/webhook/event-type/{uid}"
+          path: "/webhook/event-type/{uid}"
           apigw: "internal"
     external_interactions: "algorithm"
     tags:
@@ -134,10 +134,10 @@ use_cases:
     triggers:
       - type: "http"
         options:
-          route: "/webhook/event-type-admitted/{uid}"
+          path: "/webhook/event-type/{uid}"
           apigw: "internal"
           authenticator: "employee"
-          method: "post"
+          method: "delete"
           mapper:
             path_query.uid: uid
             body: data
