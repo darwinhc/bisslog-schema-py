@@ -5,7 +5,7 @@ This module defines the ServiceInfo dataclass that extends EntityInfo to include
 details such as service type, owning team, and associated use cases.
 """
 from dataclasses import dataclass, field
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Set, List
 
 from .commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 from .entity_info import EntityInfo
@@ -72,14 +72,17 @@ class ServiceInfo(EntityInfo):
             except (TypeError, ValueError) as e:
                 errors.append(f"ServiceInfo'{' ' + name if name is not None else ''}'"
                               f" error: {e.args[0]}")
-        metadata_analysis_report.critical_validation_count += len(validations)
-        metadata_analysis_report.errors += errors
+
 
         # Validate use cases
         sub_reports = {"use_cases": []}
+
+        check_repetition = {
+            "name": set(), "description": set(), "path_http": set()
+        }
+
         if use_cases is not None:
             for key, value in use_cases.items():
-
                 # Use case data validation
                 metadata_analysis_report.critical_validation_count += 1
                 if not isinstance(value, dict):
@@ -87,11 +90,50 @@ class ServiceInfo(EntityInfo):
                     metadata_analysis_report.errors.append(msg)
                     continue
 
+                for field_name in ("name", "description"):
+                    metadata_analysis_report.critical_validation_count += 1
+                    errors += cls._validate_not_repetition(
+                        field_name, key, value.get(field_name), check_repetition)
+
+                metadata_analysis_report.critical_validation_count += 1
+                for trigger in value.get("triggers", []):
+                    if (not isinstance(trigger, dict) or trigger.get("type") != "http"
+                            or not isinstance(trigger.get("options"), dict) or trigger["options"].get("path") is None):
+                        continue
+                    errors += cls._validate_not_repetition(
+                        "path_http",
+                        f'({trigger["options"].get("method", "GET")}) {trigger["options"].get("path")}',
+                        key, check_repetition)
+
                 value["keyname"] = key
                 use_case_analysis_report = UseCaseInfo.analyze(value)
                 sub_reports["use_cases"].append(use_case_analysis_report)
+        metadata_analysis_report.critical_validation_count += len(validations)
+        metadata_analysis_report.errors += errors
         metadata_analysis_report.sub_reports.update(sub_reports)
         return metadata_analysis_report
+
+    @staticmethod
+    def _validate_not_repetition(field_name: str, value: Any, use_case_keyname: str,
+                                 set_of_values: Dict[str, Set[Any]]) -> List[str]:
+        """Validate that the field value is not repeated in the use cases.
+
+        Parameters
+        ----------
+        value : Any
+            The value to check for repetition.
+
+        Raises
+        ------
+        ValueError
+            If the value is already used in another use case.
+        """
+        if value:
+            if value in set_of_values[field_name]:
+                return [f"UseCaseInfo '{use_case_keyname}' error: "
+                        f"{''.join(field_name.split('_')).capitalize()} '{value}' is already used."]
+            set_of_values[field_name].add(value)
+        return []
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "ServiceInfo":

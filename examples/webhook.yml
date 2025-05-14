@@ -17,7 +17,7 @@ use_cases:
     triggers:
       - options:
           method: "post"
-          route: "/webhook-receptor/{platform}/{token}"
+          path: "/webhook-receptor/{platform}/{token}"
           apigw: "webhook-receptor"
     tags:
       accessibility: "private"
@@ -31,7 +31,7 @@ use_cases:
       - options:
           method: "delete"
           authenticator: "employee"
-          route: "/webhook/event-type/{uid}"
+          path: "/webhook/event-type/{uid}"
           apigw: "internal"
     tags:
       accessibility: "private"
@@ -43,7 +43,7 @@ use_cases:
       - type: "http"
         options:
           method: "get"
-          route: "/webhook/event-type"
+          path: "/webhook/event-type"
           cacheable: true
           apigw: "internal"
     tags:
@@ -56,7 +56,7 @@ use_cases:
     triggers:
       - type: "http"
         options:
-          route: "/webhook/event-type/{uid}"
+          path: "/webhook/event-type/{uid}"
           cacheable: true
           method: "get"
           apigw: "internal"
@@ -71,7 +71,7 @@ use_cases:
     triggers:
       - type: "http"
         options:
-          route: "/webhook/event-type"
+          path: "/webhook/event-type"
           apigw: "internal"
           authenticator: "employee"
           method: "post"
@@ -89,7 +89,7 @@ use_cases:
     triggers:
       - type: "http"
         options:
-          route: "/webhook/event-type-admitted/{uid}"
+          path: "/webhook/event-type-admitted/{uid}"
           apigw: "internal"
           authenticator: "employee"
           method: "post"
@@ -108,7 +108,7 @@ use_cases:
     triggers:
       - type: "http"
         options:
-          route: "/webhook/event-type/{uid}"
+          path: "/webhook/event-type/{uid}"
           apigw: "internal"
           method: "update"
           authenticator: "employee"
@@ -125,7 +125,7 @@ use_cases:
     triggers:
       - type: "http"
         options:
-          route: "/webhook/platform-receiver/{uid}"
+          path: "/webhook/platform-receiver/{uid}"
           authenticator: "employee"
           apigw: "internal"
           method: "delete"
@@ -140,7 +140,7 @@ use_cases:
     triggers:
       - type: "http"
         options:
-          route: "/webhook/platform"
+          path: "/webhook/platform"
           cacheable: true
           apigw: "internal"
           method: "get"
@@ -155,7 +155,7 @@ use_cases:
     triggers:
       - type: "http"
         options:
-          route: "/webhook/platform-receiver/{uid}"
+          path: "/webhook/platform-receiver/{uid}"
           cacheable: true
           method: "get"
           apigw: "internal"
@@ -170,7 +170,7 @@ use_cases:
     triggers:
       - type: "http"
         options:
-          route: "/webhook/platform"
+          path: "/webhook/platform"
           authenticator: "employee"
           apigw: "internal"
           method: "post"
@@ -185,7 +185,7 @@ use_cases:
     triggers:
       - type: "http"
         options:
-          route: "/webhook/platform-receiver/{uid}"
+          path: "/webhook/platform-receiver/{uid}"
           method: "update"
           apigw: "internal"
           authenticator: "employee"
