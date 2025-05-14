@@ -79,7 +79,7 @@ class TriggerHttp(TriggerOptions, TriggerMappable):
         validations = [
             (cls._validate_required_str_field, "method", data.get("method")),
             (cls._validate_optional_str_field, "authenticator", data.get("authenticator")),
-            (cls._validate_optional_str_field, "path", data.get("path")),
+            (cls._validate_required_str_field, "path", data.get("path")),
             (cls._validate_optional_str_field, "apigw", data.get("apigw")),
             (cls._validate_boolean_field, "cacheable", data.get("cacheable")),
             (cls._validate_boolean_field, "allow_cors", data.get("allow_cors")),

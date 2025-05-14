@@ -60,7 +60,7 @@ class UseCaseInfo(EntityInfo):
         keyname = data["keyname"]
 
         # Validate main fields
-        validated_data, errors = cls._validate_main_fields(data, keyname)
+        validated_data, errors = cls._validate_main_fields(data, data.get("name") or keyname)
 
         # Process sub-reports
         sub_reports = cls._process_sub_reports(validated_data, keyname)
@@ -93,7 +93,7 @@ class UseCaseInfo(EntityInfo):
             try:
                 validated_data[field_name] = validate_func(field_value)
             except (TypeError, ValueError) as e:
-                msg = f"UseCase '{keyname}' error: {e.args[0]}"
+                msg = f"UseCaseInfo '{keyname}' error: {e.args[0]}"
                 errors.append(msg)
 
         return validated_data, errors
