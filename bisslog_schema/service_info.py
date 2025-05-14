@@ -82,36 +82,64 @@ class ServiceInfo(EntityInfo):
         }
 
         if use_cases is not None:
-            for key, value in use_cases.items():
+            for use_case_keyname, use_case_info_dict in use_cases.items():
                 # Use case data validation
                 metadata_analysis_report.critical_validation_count += 1
-                if not isinstance(value, dict):
-                    msg = f"Use case data for '{key}' must be a dictionary."
+                if not isinstance(use_case_info_dict, dict):
+                    msg = f"Use case data for '{use_case_keyname}' must be a dictionary."
                     metadata_analysis_report.errors.append(msg)
                     continue
 
-                for field_name in ("name", "description"):
-                    metadata_analysis_report.critical_validation_count += 1
-                    errors += cls._validate_not_repetition(
-                        field_name, key, value.get(field_name), check_repetition)
+                metadata_analysis_report.critical_validation_count += 2 + (
+                    len(use_case_info_dict.get("triggers") or [])
+                    if isinstance(use_case_info_dict, dict) else 0
+                )
+                errors.extend(cls._validate_not_repetition_fields(
+                    use_case_keyname, use_case_info_dict, check_repetition))
 
-                metadata_analysis_report.critical_validation_count += 1
-                for trigger in value.get("triggers", []):
-                    if (not isinstance(trigger, dict) or trigger.get("type") != "http"
-                            or not isinstance(trigger.get("options"), dict) or trigger["options"].get("path") is None):
-                        continue
-                    errors += cls._validate_not_repetition(
-                        "path_http",
-                        f'({trigger["options"].get("method", "GET")}) {trigger["options"].get("path")}',
-                        key, check_repetition)
-
-                value["keyname"] = key
-                use_case_analysis_report = UseCaseInfo.analyze(value)
+                use_case_info_dict["keyname"] = use_case_keyname
+                use_case_analysis_report = UseCaseInfo.analyze(use_case_info_dict)
                 sub_reports["use_cases"].append(use_case_analysis_report)
         metadata_analysis_report.critical_validation_count += len(validations)
         metadata_analysis_report.errors += errors
         metadata_analysis_report.sub_reports.update(sub_reports)
         return metadata_analysis_report
+
+    @classmethod
+    def _validate_not_repetition_fields(
+            cls, use_case_keyname: str, use_case_info_dict: dict,
+            check_repetition: Dict[str, Set[str]]) -> List[str]:
+        """Validate that the field value is not repeated in the use cases.
+
+        Parameters
+        ----------
+        use_case_keyname : str
+            The key name of the use case.
+        use_case_info_dict : dict
+            The use case information dictionary to validate.
+        check_repetition : Dict[str, Set[str]]
+            A dictionary to track unique values for each field.
+
+        Returns
+        -------
+        List[str]
+            A list of error messages if any validation fails.
+        """
+        errors = []
+        for field_name in ("name", "description"):
+            errors += cls._validate_not_repetition(
+                field_name, use_case_keyname, use_case_info_dict.get(field_name), check_repetition)
+
+        for trigger in use_case_info_dict.get("triggers", []):
+            if (not isinstance(trigger, dict) or trigger.get("type") != "http"
+                    or not isinstance(trigger.get("options"), dict) or trigger["options"].get("path") is None):
+                continue
+            errors += cls._validate_not_repetition(
+                "path_http",
+                f'({trigger["options"].get("method", "GET")}) {trigger["options"].get("path")}',
+                use_case_keyname, check_repetition
+            )
+        return errors
 
     @staticmethod
     def _validate_not_repetition(field_name: str, value: Any, use_case_keyname: str,
