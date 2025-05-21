@@ -1,7 +1,7 @@
 import pytest
-from bisslog_schema.use_case_info import UseCaseInfo
-from bisslog_schema.triggers.trigger_info import TriggerInfo
-from bisslog_schema.external_interaction import ExternalInteraction
+from bisslog_schema.schema_dto.use_case_info import UseCaseInfo
+from bisslog_schema.schema_dto.triggers.trigger_info import TriggerInfo
+from bisslog_schema.schema_dto.external_interaction import ExternalInteraction
 from bisslog_schema.enums.criticality import CriticalityEnum
 
 

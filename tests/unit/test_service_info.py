@@ -1,6 +1,6 @@
 import pytest
-from bisslog_schema.service_info import ServiceInfo
-from bisslog_schema.use_case_info import UseCaseInfo
+from bisslog_schema.schema_dto.service_info import ServiceInfo
+from bisslog_schema.schema_dto.use_case_info import UseCaseInfo
 
 
 def test_service_info_valid_data():

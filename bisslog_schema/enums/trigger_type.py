@@ -4,11 +4,11 @@ Module defining the Trigger Type Enum and associated trigger classes
 from enum import Enum
 from typing import Type, Optional
 
-from ..triggers.trigger_consumer import TriggerConsumer
-from ..triggers.trigger_options import TriggerOptions
-from ..triggers.trigger_http import TriggerHttp
-from ..triggers.trigger_schedule import TriggerSchedule
-from ..triggers.trigger_websocket import TriggerWebsocket
+from bisslog_schema.schema_dto.triggers.trigger_consumer import TriggerConsumer
+from bisslog_schema.schema_dto.triggers.trigger_options import TriggerOptions
+from bisslog_schema.schema_dto.triggers import TriggerHttp
+from bisslog_schema.schema_dto.triggers import TriggerSchedule
+from bisslog_schema.schema_dto.triggers import TriggerWebsocket
 
 
 class TriggerEnum(Enum):

@@ -1,5 +1,5 @@
 import pytest
-from bisslog_schema.triggers.trigger_consumer import TriggerConsumer
+from bisslog_schema.schema_dto.triggers import TriggerConsumer
 from bisslog_schema.enums.event_delivery_semantic import EventDeliverySemantic
 
 

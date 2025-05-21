@@ -1,6 +1,6 @@
 import pytest
-from bisslog_schema.triggers.trigger_info import TriggerInfo
-from bisslog_schema.triggers.trigger_http import TriggerHttp
+from bisslog_schema.schema_dto.triggers.trigger_info import TriggerInfo
+from bisslog_schema.schema_dto.triggers.trigger_http import TriggerHttp
 from bisslog_schema.enums.trigger_type import TriggerEnum
 
 

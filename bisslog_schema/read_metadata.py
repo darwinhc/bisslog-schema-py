@@ -8,7 +8,7 @@ import json
 import sys
 from typing import Optional
 
-from .service_info import ServiceInfo
+from bisslog_schema.schema_dto.service_info import ServiceInfo
 
 default_path_options = (
     "./metadata.yml",

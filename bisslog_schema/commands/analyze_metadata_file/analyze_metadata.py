@@ -10,7 +10,7 @@ import sys
 
 from .metadata_analysis_report import MetadataAnalysisReport
 from ...read_metadata import read_metadata_file
-from ...service_info import ServiceInfo
+from bisslog_schema.schema_dto.service_info import ServiceInfo
 
 
 def generate_report(path: str, *, format_file: str = "yaml",
