@@ -3,6 +3,8 @@ of a distributed system, focusing on its use cases and service design.
 It structures the metadata without exposing any underlying technical
 or implementation-specific details."""
 from .read_metadata import read_service_metadata
+from .use_case_code_inspector import extract_use_case_code_metadata, extract_use_case_obj_from_code
 
 
-__all__ = ["read_service_metadata"]
+__all__ = ["read_service_metadata", "extract_use_case_code_metadata",
+           "extract_use_case_obj_from_code"]

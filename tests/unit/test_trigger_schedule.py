@@ -1,5 +1,5 @@
 import pytest
-from bisslog_schema.triggers.trigger_schedule import TriggerSchedule
+from bisslog_schema.schema.triggers.trigger_schedule import TriggerSchedule
 
 
 def test_trigger_schedule_valid_data():

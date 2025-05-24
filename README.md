@@ -129,7 +129,8 @@ Service metadata can be loaded dynamically from external YAML or JSON files.
 
 The following example illustrates a service definition with its use cases and external interactions:
 
-![service-definition-example-image](docs/assets/bisslog-schema-service-example-image.jpg)
+![service-definition-example-image](https://raw.githubusercontent.com/darwinhc/bisslog-schema-py/master/docs/assets/bisslog-schema-service-example-image.jpg)
+
 
 This is the YAML representation of the service definition:
 ```yaml
@@ -213,7 +214,7 @@ The `ExternalInteraction` class represents an external interaction in the system
 
 **Example of External Interaction:**
 
-![external-interaction-example-image](docs/assets/bisslog-schema-external-interaction-image.jpg)
+![external-interaction-example-image](https://raw.githubusercontent.com/darwinhc/bisslog-schema-py/master/docs/assets/bisslog-schema-external-interaction-image.jpg)
 
 ```yaml
 use_cases:

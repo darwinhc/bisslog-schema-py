@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Union, Any, Dict
 from json import dumps
 
-from .commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from ..commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 from .entity_info import EntityInfo
 from .enums.criticality import CriticalityEnum
 from .external_interaction import ExternalInteraction
