@@ -1,5 +1,5 @@
 import pytest
-from bisslog_schema.schema_dto.external_interaction import ExternalInteraction
+from bisslog_schema.schema.external_interaction import ExternalInteraction
 
 
 def test_external_interaction_valid_data():

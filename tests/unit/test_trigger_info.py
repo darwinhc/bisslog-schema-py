@@ -1,7 +1,7 @@
 import pytest
-from bisslog_schema.schema_dto.triggers.trigger_info import TriggerInfo
-from bisslog_schema.schema_dto.triggers.trigger_http import TriggerHttp
-from bisslog_schema.enums.trigger_type import TriggerEnum
+from bisslog_schema.schema.triggers.trigger_info import TriggerInfo
+from bisslog_schema.schema.triggers.trigger_http import TriggerHttp
+from bisslog_schema.schema.enums.trigger_type import TriggerEnum
 
 
 def test_valid_trigger_info_with_http_dict():

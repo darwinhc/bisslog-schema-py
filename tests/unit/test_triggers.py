@@ -1,12 +1,12 @@
 import pytest
 
-from bisslog_schema.enums.event_delivery_semantic import EventDeliverySemantic
-from bisslog_schema.schema_dto.triggers.trigger_info import TriggerInfo
-from bisslog_schema.schema_dto.triggers.trigger_http import TriggerHttp
-from bisslog_schema.schema_dto.triggers.trigger_websocket import TriggerWebsocket
-from bisslog_schema.schema_dto.triggers import TriggerConsumer
-from bisslog_schema.schema_dto.triggers.trigger_schedule import TriggerSchedule
-from bisslog_schema.enums.trigger_type import TriggerEnum
+from bisslog_schema.schema.enums.event_delivery_semantic import EventDeliverySemantic
+from bisslog_schema.schema.triggers.trigger_info import TriggerInfo
+from bisslog_schema.schema.triggers.trigger_http import TriggerHttp
+from bisslog_schema.schema.triggers.trigger_websocket import TriggerWebsocket
+from bisslog_schema.schema.triggers.trigger_consumer import TriggerConsumer
+from bisslog_schema.schema.triggers.trigger_schedule import TriggerSchedule
+from bisslog_schema.schema.enums.trigger_type import TriggerEnum
 
 
 def test_trigger_http_from_dict():

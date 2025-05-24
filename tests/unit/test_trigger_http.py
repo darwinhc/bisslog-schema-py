@@ -1,5 +1,5 @@
 import pytest
-from bisslog_schema.schema_dto.triggers.trigger_http import TriggerHttp
+from bisslog_schema.schema.triggers.trigger_http import TriggerHttp
 
 
 def test_trigger_http_valid_data():
