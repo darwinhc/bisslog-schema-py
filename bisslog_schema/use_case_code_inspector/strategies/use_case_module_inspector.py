@@ -68,6 +68,25 @@ class UseCaseModuleInspector(ABC):
         return False
 
     @staticmethod
+    def _is_same_module(attr, module) -> bool:
+        """
+        Check if the attribute belongs to the same module.
+
+        Parameters
+        ----------
+        attr : object
+            The attribute to check.
+        module : ModuleType
+            The module to compare against.
+
+        Returns
+        -------
+        bool
+            True if the attribute belongs to the same module, False otherwise.
+        """
+        return hasattr(attr, "__module__") and attr.__module__ == module.__name__
+
+    @staticmethod
     def _is_use_case_class(obj) -> bool:
         """
         Determine if the given object is a use case class.

@@ -9,7 +9,7 @@ from json import dumps
 
 from ..commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 from .entity_info import EntityInfo
-from bisslog_schema.schema.enums.criticality import CriticalityEnum
+from .enums.criticality import CriticalityEnum
 from .external_interaction import ExternalInteraction
 from .triggers.trigger_info import TriggerInfo
 
