@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from typing import Optional, Dict, Any
 
 from .base_obj_schema import BaseObjSchema
-from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from ..commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 
 
 @dataclass

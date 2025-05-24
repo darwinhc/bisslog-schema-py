@@ -4,7 +4,7 @@ from typing import Dict, Any, Union, Optional
 
 from ..base_obj_schema import BaseObjSchema
 from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
-from bisslog_schema.enums.trigger_type import TriggerEnum
+from bisslog_schema.schema.enums.trigger_type import TriggerEnum
 from .trigger_options import TriggerOptions
 
 

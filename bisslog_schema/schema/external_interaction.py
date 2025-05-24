@@ -7,7 +7,7 @@ from typing import Optional, Any, Dict, Union, Tuple, List
 
 from .base_obj_schema import BaseObjSchema
 from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
-from bisslog_schema.enums.type_external_interaction import TypeExternalInteraction
+from bisslog_schema.schema.enums.type_external_interaction import TypeExternalInteraction
 
 
 @dataclass

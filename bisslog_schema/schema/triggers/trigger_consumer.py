@@ -4,8 +4,8 @@ from typing import Optional, Dict, Any
 
 from .trigger_mappable import TriggerMappable
 from .trigger_options import TriggerOptions
-from bisslog_schema.enums.event_delivery_semantic import EventDeliverySemantic
-from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from ...schema.enums.event_delivery_semantic import EventDeliverySemantic
+from ...commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 
 expected_keys = ("event", "context")
 
