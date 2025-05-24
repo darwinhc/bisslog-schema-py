@@ -1,8 +1,8 @@
 import pytest
-from bisslog_schema.use_case_info import UseCaseInfo
-from bisslog_schema.triggers.trigger_info import TriggerInfo
-from bisslog_schema.external_interaction import ExternalInteraction
-from bisslog_schema.enums.criticality import CriticalityEnum
+from bisslog_schema.schema.use_case_info import UseCaseInfo
+from bisslog_schema.schema.triggers.trigger_info import TriggerInfo
+from bisslog_schema.schema.external_interaction import ExternalInteraction
+from bisslog_schema.schema.enums.criticality import CriticalityEnum
 
 
 def test_use_case_info_valid_data():

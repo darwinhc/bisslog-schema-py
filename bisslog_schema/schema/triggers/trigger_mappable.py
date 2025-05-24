@@ -9,7 +9,7 @@ expected source naming conventions.
 from dataclasses import dataclass
 from typing import Optional, Dict, Iterable
 
-from ..commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from ...commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 
 
 @dataclass

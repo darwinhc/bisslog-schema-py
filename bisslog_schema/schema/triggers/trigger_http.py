@@ -5,7 +5,7 @@ from typing import Optional, Dict, Any, List, Union
 
 from .trigger_mappable import TriggerMappable
 from .trigger_options import TriggerOptions
-from ..commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 
 expected_keys = ("path_query", "body", "params", "headers", "context")
 
