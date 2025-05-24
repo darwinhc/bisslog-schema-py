@@ -7,7 +7,7 @@ details such as service type, owning team, and associated use cases.
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Any, Set, List
 
-from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from ..commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 from .entity_info import EntityInfo
 from .use_case_info import UseCaseInfo
 
@@ -132,7 +132,8 @@ class ServiceInfo(EntityInfo):
 
         for trigger in use_case_info_dict.get("triggers", []):
             if (not isinstance(trigger, dict) or trigger.get("type") != "http"
-                    or not isinstance(trigger.get("options"), dict) or trigger["options"].get("path") is None):
+                    or not isinstance(trigger.get("options"), dict)
+                    or trigger["options"].get("path") is None):
                 continue
             errors += cls._validate_not_repetition(
                 "path_http",

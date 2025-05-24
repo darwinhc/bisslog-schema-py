@@ -89,7 +89,7 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
         """
         class_obj = None
         for key, attr in vars(module).items():
-            if not hasattr(attr, "__module__") or attr.__module__ != module.__name__:
+            if not cls._is_same_module(attr, module):
                 continue
             if cls._is_use_case_class(attr):
                 class_obj = attr
