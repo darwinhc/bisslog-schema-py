@@ -8,7 +8,7 @@ import json
 import sys
 from typing import Optional
 
-from .schema.service_info import ServiceInfo
+from .service_info import ServiceInfo
 
 
 def _find_path(path: Optional[str]) -> str:
