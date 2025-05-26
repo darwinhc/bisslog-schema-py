@@ -22,7 +22,7 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
     """
 
     @staticmethod
-    def _build_use_case_info_obj(use_case_keyname: str,
+    def _build_use_case_info_obj(use_case_keyname: str, module_path: str,
                                  obj: Any, var_name: str) -> UseCaseCodeInfoObject:
         """Build a UseCaseCodeInfo object for a use case instance or function.
 
@@ -32,6 +32,8 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
             The key name identifier for the use case.
         obj : Any
             The use case object or function.
+        module_path : str
+            Path of the module
         var_name : str
             The variable name of the use case in the module.
 
@@ -44,16 +46,19 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
             docs = obj.__doc__
         else:
             docs = obj.entrypoint.__doc__
-        return UseCaseCodeInfoObject(use_case_keyname, docs, None, var_name)
+        return UseCaseCodeInfoObject(use_case_keyname, docs, module_path, var_name)
 
     @classmethod
-    def _find_use_case_standard(cls, module, use_case_keyname: str) -> Optional[UseCaseCodeInfo]:
+    def _find_use_case_standard(cls, module, use_case_keyname: str,
+                                module_path: str) -> Optional[UseCaseCodeInfo]:
         """Find a use case object in the module using standard naming conventions.
 
         Parameters
         ----------
         module : ModuleType
             The Python module to inspect.
+        module_path : str
+            Path of the module
         use_case_keyname : str
             The key name identifier for the use case.
 
@@ -68,11 +73,13 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
                     continue
                 if attr.__module__ != module.__name__ or not cls._is_use_case_object(attr):
                     continue
-                return cls._build_use_case_info_obj(use_case_keyname, attr, suggested_var_name)
+                return cls._build_use_case_info_obj(
+                    use_case_keyname, module_path, attr, suggested_var_name)
         return None
 
     @classmethod
-    def _deep_search_of_metadata(cls, use_case_keyname: str, module) -> Optional[UseCaseCodeInfo]:
+    def _deep_search_of_metadata(cls, use_case_keyname: str, module,
+                                 module_path: str) -> Optional[UseCaseCodeInfo]:
         """Analyze the module to find use case objects and classes.
 
         Parameters
@@ -81,6 +88,8 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
             The key name identifier for the use case.
         module : ModuleType
             The Python module to inspect.
+        module_path : str
+            Path of the module
 
         Returns
         -------
@@ -95,19 +104,22 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
                 class_obj = attr
                 continue
             if cls._is_use_case_object(attr):
-                return cls._build_use_case_info_obj(use_case_keyname, attr, key)
+                return cls._build_use_case_info_obj(use_case_keyname, module_path, attr, key)
         if class_obj is not None:
-            return cls._build_use_case_info_class(use_case_keyname, class_obj)
+            return cls._build_use_case_info_class(use_case_keyname, module_path, class_obj)
         return None
 
     @staticmethod
-    def _build_use_case_info_class(use_case_keyname: str, class_obj: Type) -> UseCaseCodeInfo:
+    def _build_use_case_info_class(use_case_keyname: str, module_path: str,
+                                   class_obj: Type) -> UseCaseCodeInfo:
         """Build a UseCaseCodeInfo object for a use case class.
 
         Parameters
         ----------
         use_case_keyname : str
             The key name identifier for the use case.
+        module_path : str
+            Path of the module
         class_obj : Type
             The use case class.
 
@@ -118,7 +130,7 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
         """
         new_obj = class_obj()
         docs = new_obj.entrypoint.__doc__
-        return UseCaseCodeInfoClass(use_case_keyname, docs, None, class_obj.__name__)
+        return UseCaseCodeInfoClass(use_case_keyname, docs, module_path, class_obj.__name__)
 
     def __call__(self, module_path: str, *,
                 var_name_in_module: Optional[str] = None):
@@ -153,14 +165,13 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
             if not self._is_use_case_object(obj):
                 raise AttributeError(
                     f"Use case object in var name {var_name_in_module} is not a use case object")
-            res = self._build_use_case_info_obj(use_case_keyname, obj, var_name_in_module)
+            return self._build_use_case_info_obj(
+                use_case_keyname, module_path, obj, var_name_in_module)
 
         else:
-            res = self._find_use_case_standard(module, use_case_keyname)
+            res = self._find_use_case_standard(module, use_case_keyname, module_path)
 
         if res is None:
-            res = self._deep_search_of_metadata(use_case_keyname, module)
+            res = self._deep_search_of_metadata(use_case_keyname, module, module_path)
 
-        if res is not None:
-            res.module = module_path
         return res
