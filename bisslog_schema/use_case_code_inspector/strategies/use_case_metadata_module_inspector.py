@@ -160,5 +160,7 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
 
         if res is None:
             res = self._deep_search_of_metadata(use_case_keyname, module)
-        res.module = module_path
+
+        if res is not None:
+            res.module = module_path
         return res
