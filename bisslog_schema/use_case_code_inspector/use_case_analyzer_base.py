@@ -77,6 +77,10 @@ class UseCaseCodeAnalyzerBase:
         ValueError
             If the given path is invalid or no suitable path is found.
         """
+
+        if path is None:
+            path = os.getenv("BISSLOG_USE_CASES_FOLDER")
+
         if path is not None:
             if cls._is_python_module_path(path):
                 path_folder = "./" + path.replace(".", "/")
