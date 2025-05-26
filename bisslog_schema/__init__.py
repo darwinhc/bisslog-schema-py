@@ -4,7 +4,7 @@ It structures the metadata without exposing any underlying technical
 or implementation-specific details."""
 from .schema.read_metadata import read_service_metadata
 from .use_case_code_inspector import extract_use_case_code_metadata, extract_use_case_obj_from_code
-
+from .service_full_reader import read_full_service_metadata
 
 __all__ = ["read_service_metadata", "extract_use_case_code_metadata",
-           "extract_use_case_obj_from_code"]
+           "extract_use_case_obj_from_code", "read_full_service_metadata"]
