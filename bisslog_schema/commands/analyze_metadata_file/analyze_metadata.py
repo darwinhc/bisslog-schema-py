@@ -9,7 +9,7 @@ from typing import Optional, Dict, Any
 import sys
 
 from .metadata_analysis_report import MetadataAnalysisReport
-from ...read_metadata import read_metadata_file
+from ...schema.read_metadata import read_metadata_file
 from ...schema.service_info import ServiceInfo
 
 

@@ -95,7 +95,7 @@ You can specify the path to the metadata file as an argument or as an environmen
 ### Example
 
 ```python
-from bisslog_schema.read_metadata import read_service_metadata
+from bisslog_schema import read_service_metadata
 
 service_info = read_service_metadata()
 print(service_info.name)
