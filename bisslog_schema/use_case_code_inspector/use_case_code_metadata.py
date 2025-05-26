@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 
-@dataclass(frozen=True)
+@dataclass
 class UseCaseCodeInfo:
     """Base metadata structure for a use case object or class.
 
@@ -28,7 +28,7 @@ class UseCaseCodeInfo:
     docs: Optional[str]
     module: Optional[str]
 
-@dataclass(frozen=True)
+@dataclass
 class UseCaseCodeInfoObject(UseCaseCodeInfo):
     """Metadata for a use case object or function instance.
 
@@ -42,7 +42,7 @@ class UseCaseCodeInfoObject(UseCaseCodeInfo):
     """
     var_name: str
 
-@dataclass(frozen=True)
+@dataclass
 class UseCaseCodeInfoClass(UseCaseCodeInfo):
     """Metadata for a use case class definition.
 
