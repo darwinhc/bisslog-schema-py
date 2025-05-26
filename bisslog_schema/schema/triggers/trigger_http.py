@@ -112,7 +112,8 @@ class TriggerHttp(TriggerOptions, TriggerMappable):
         """
         mapper = cls.verify_source_prefix(data.get("mapper"), expected_keys)
         return cls(
-            method=cls._validate_required_str_field("method", data.get("method", "GET")),
+            method=cls._validate_required_str_field(
+                "method", data.get("method", "GET").upper()),
             authenticator=data.get("authenticator"),
             path=cls._validate_optional_str_field("path", data.get("path")),
             apigw=cls._validate_optional_str_field("apigw", data.get("apigw")),
