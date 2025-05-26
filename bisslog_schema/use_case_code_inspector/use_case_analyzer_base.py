@@ -100,7 +100,7 @@ class UseCaseCodeAnalyzerBase:
             "src.usecases", "src.domain.use_cases", "src.domain.usecases", "src.use_cases"
         )
         for d_path in defaults:
-            path_folder = os.path.join(os.path.dirname(__file__), d_path.replace(".", "/"))
+            path_folder = os.path.join(d_path.replace(".", "/"))
             if os.path.isdir(path_folder):
                 return d_path
 
