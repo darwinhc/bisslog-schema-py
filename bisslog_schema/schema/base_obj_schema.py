@@ -54,7 +54,7 @@ class BaseObjSchema(metaclass=ABCMeta):
 
         Returns
         -------
-        Optional[str]
+        str
             The validated service type value.
 
         Raises
@@ -73,7 +73,7 @@ class BaseObjSchema(metaclass=ABCMeta):
         return value
 
     @staticmethod
-    def _validate_boolean_field(field_name: str, value: Optional[bool]) -> Optional[bool]:
+    def _validate_boolean_field(field_name: str, value: Optional[bool]) -> bool:
         """
         Validate the optional boolean field.
 
@@ -86,7 +86,7 @@ class BaseObjSchema(metaclass=ABCMeta):
 
         Returns
         -------
-        Optional[bool]
+        bool
             The validated service type value.
 
         Raises
