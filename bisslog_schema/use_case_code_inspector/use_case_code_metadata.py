@@ -8,6 +8,8 @@ use case definitions.
 """
 
 from dataclasses import dataclass
+from typing import Optional
+
 
 @dataclass(frozen=True)
 class UseCaseCodeInfo:
@@ -23,7 +25,8 @@ class UseCaseCodeInfo:
         The docstring or documentation associated with the use case.
     """
     name: str
-    docs: str
+    docs: Optional[str]
+    module: Optional[str]
 
 @dataclass(frozen=True)
 class UseCaseCodeInfoObject(UseCaseCodeInfo):

@@ -44,7 +44,7 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
             docs = obj.__doc__
         else:
             docs = obj.entrypoint.__doc__
-        return UseCaseCodeInfoObject(use_case_keyname, docs, var_name)
+        return UseCaseCodeInfoObject(use_case_keyname, docs, None, var_name)
 
     @classmethod
     def _find_use_case_standard(cls, module, use_case_keyname: str) -> Optional[UseCaseCodeInfo]:
@@ -118,7 +118,7 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
         """
         new_obj = class_obj()
         docs = new_obj.entrypoint.__doc__
-        return UseCaseCodeInfoClass(use_case_keyname, docs, class_obj.__name__)
+        return UseCaseCodeInfoClass(use_case_keyname, docs, None, class_obj.__name__)
 
     def __call__(self, module_path: str, *,
                 var_name_in_module: Optional[str] = None):
@@ -153,9 +153,12 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
             if not self._is_use_case_object(obj):
                 raise AttributeError(
                     f"Use case object in var name {var_name_in_module} is not a use case object")
-            self._build_use_case_info_obj(use_case_keyname, obj, var_name_in_module)
+            res = self._build_use_case_info_obj(use_case_keyname, obj, var_name_in_module)
+
         else:
             res = self._find_use_case_standard(module, use_case_keyname)
-            if res is not None:
-                return res
-        return self._deep_search_of_metadata(use_case_keyname, module)
+
+        if res is None:
+            res = self._deep_search_of_metadata(use_case_keyname, module)
+        res.module = module_path
+        return res
