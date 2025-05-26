@@ -11,7 +11,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Optional
 import importlib
 
-from bisslog_schema.utils.to_snake_case import to_snake_case
+from ...utils.to_snake_case import to_snake_case
 
 
 class UseCaseModuleInspector(ABC):

@@ -8,4 +8,5 @@ extract_use_case_code_metadata = PackageTreeReader(UseCaseMetadataModuleInspecto
 extract_use_case_obj_from_code = PackageTreeReader(UseCaseObjectModuleInspector())
 
 
-__all__ = ["extract_use_case_code_metadata", "extract_use_case_obj_from_code"]
+__all__ = ["extract_use_case_code_metadata", "extract_use_case_obj_from_code",
+           "PackageTreeReader"]
