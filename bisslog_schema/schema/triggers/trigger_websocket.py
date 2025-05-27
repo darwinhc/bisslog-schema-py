@@ -6,7 +6,7 @@ from .trigger_mappable import TriggerMappable
 from .trigger_options import TriggerOptions
 from ...commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 
-expected_keys = ("event", "context")
+expected_keys = ("connection_id", "route_key", "body", "headers")
 
 
 @dataclass
