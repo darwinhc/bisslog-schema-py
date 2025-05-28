@@ -1,6 +1,6 @@
 import pytest
-from bisslog_schema.triggers.trigger_consumer import TriggerConsumer
-from bisslog_schema.enums.event_delivery_semantic import EventDeliverySemantic
+from bisslog_schema.schema.triggers.trigger_consumer import TriggerConsumer
+from bisslog_schema.schema.enums.event_delivery_semantic import EventDeliverySemantic
 
 
 def test_trigger_consumer_valid_data():

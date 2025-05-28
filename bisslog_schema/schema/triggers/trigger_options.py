@@ -3,7 +3,7 @@ from abc import ABCMeta
 from typing import Dict, Any, List, Tuple
 
 from ..base_obj_schema import BaseObjSchema
-from ..commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
+from ...commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 
 
 class TriggerOptions(BaseObjSchema, metaclass=ABCMeta):

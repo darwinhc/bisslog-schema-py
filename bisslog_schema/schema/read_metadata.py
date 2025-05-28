@@ -10,15 +10,6 @@ from typing import Optional
 
 from .service_info import ServiceInfo
 
-default_path_options = (
-    "./metadata.yml",
-    "./docs/metadata.yml",
-    "./metadata.json",
-    "./docs/metadata.json",
-    "./metadata.yaml",
-    "./docs/metadata.yaml",
-)
-
 
 def _find_path(path: Optional[str]) -> str:
     """Find the path of the metadata file.
@@ -48,6 +39,14 @@ def _find_path(path: Optional[str]) -> str:
         if not os.path.isfile(path):
             raise ValueError(f"Path {path} of metadata does not exist")
     else:
+        default_path_options = (
+            "./metadata.yml",
+            "./docs/metadata.yml",
+            "./metadata.json",
+            "./docs/metadata.json",
+            "./metadata.yaml",
+            "./docs/metadata.yaml",
+        )
         for path_option in default_path_options:
             if os.path.isfile(path_option):
                 path = path_option
