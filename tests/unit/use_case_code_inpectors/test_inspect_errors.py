@@ -30,5 +30,5 @@ def test_inspect_errors_path_does_not_exists(path):
 def test_inspect_errors_invalid_path(path):
 
     with pytest.raises(
-            ValueError, match=f"Invalid path: {path}. Path should be a valid module or folder path."):
+            ValueError, match=f"Invalid path: '{path}'. Path should be a valid module or folder path."):
         extract_use_case_code_metadata(path=path)

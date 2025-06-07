@@ -61,3 +61,26 @@ def test_trigger_schedule_invalid_max_attempts():
     data = {"cronjob": "0 0 * * *", "max_attempts": -1}
     with pytest.raises(ValueError, match="The 'max_attempts' field must be greater or equal than 0"):
         TriggerSchedule.from_dict(data)
+
+@pytest.mark.parametrize("input_tz,expected", [
+    ("UTC", "Etc/UTC"),
+    ("utc", "Etc/UTC"),
+    ("GMT", "Etc/GMT"),
+    ("GMT+0", "Etc/GMT"),
+    ("GMT+3", "Etc/GMT-3"),
+    ("GMT-2", "Etc/GMT+2"),
+    ("America/Bogota", "America/Bogota")
+])
+def test_normalize_timezone_valid_cases(input_tz, expected):
+    """Tests that various timezone aliases normalize to expected IANA values."""
+    normalized = TriggerSchedule.normalize_timezone(input_tz)
+    assert normalized == expected
+
+
+def test_validate_tz_on_standard_with_valid_iana():
+    """Tests that a valid IANA timezone like 'America/Bogota' passes validation."""
+    tz = "America/Bogota"
+    result = TriggerSchedule.validate_tz_on_standard(tz)
+    assert result == tz
+
+
