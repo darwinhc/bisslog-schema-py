@@ -1,4 +1,5 @@
 """Module defining trigger schedule configuration class"""
+import re
 from dataclasses import dataclass
 from typing import Optional, Dict, Any
 
@@ -6,17 +7,18 @@ from ...commands.analyze_metadata_file.metadata_analysis_report import MetadataA
 
 try:
     from zoneinfo import available_timezones
+
     _ZONE_INFO_AVAILABLE = True
 except ImportError:
     try:
         from backports.zoneinfo import available_timezones
+
         _ZONE_INFO_AVAILABLE = True
     except ImportError:
         available_timezones = None
         _ZONE_INFO_AVAILABLE = False
 
 from .trigger_options import TriggerOptions
-
 
 
 @dataclass
@@ -72,6 +74,39 @@ class TriggerSchedule(TriggerOptions):
             cls.validate_tz_on_standard(timezone)
         return timezone
 
+    @staticmethod
+    def normalize_timezone(tz: str) -> str:
+        """
+        Normalize a timezone string, including aliases like 'UTC', 'GMT+5', etc.
+
+        Parameters
+        ----------
+        tz : str
+            Input timezone string.
+
+        Returns
+        -------
+        str
+            Normalized timezone string compatible with IANA.
+
+        Raises
+        ------
+        ValueError
+            If the timezone is invalid or cannot be normalized.
+        """
+        tz = tz.strip()
+        if tz.upper() == "UTC":
+            return "Etc/UTC"
+        if tz.upper() == "GMT" or tz.upper() == "GMT+0":
+            return "Etc/GMT"
+
+        gmt_match = re.fullmatch(r"GMT([+-])(\d{1,2})", tz.upper())
+        if gmt_match:
+            sign, hours = gmt_match.groups()
+            inverted_sign = "-" if sign == "+" else "+"
+            return f"Etc/GMT{inverted_sign}{hours}"
+        return tz
+
     @classmethod
     def validate_tz_on_standard(cls, timezone: str) -> str:
         """
@@ -92,10 +127,10 @@ class TriggerSchedule(TriggerOptions):
         ValueError
             If the timezone is not recognized.
         """
-        if _ZONE_INFO_AVAILABLE and timezone not in available_timezones():
+        tz_normalized = cls.normalize_timezone(timezone)
+        if _ZONE_INFO_AVAILABLE and tz_normalized not in available_timezones():
             raise ValueError(f"Invalid timezone string: {timezone}")
         return timezone
-
 
     @classmethod
     def analyze(cls, data: Dict[str, Any], trigger_keyname: str,

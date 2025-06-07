@@ -90,7 +90,7 @@ class UseCaseCodeAnalyzerBase:
                 path_folder = path
             else:
                 raise ValueError(
-                    f"Invalid path: {path}. Path should be a valid module or folder path.")
+                    f"Invalid path: '{path}'. Path should be a valid module or folder path.")
             if not os.path.isdir(path_folder):
                 raise ValueError(f"Path '{path}' of use cases does not exist")
             return path_module
