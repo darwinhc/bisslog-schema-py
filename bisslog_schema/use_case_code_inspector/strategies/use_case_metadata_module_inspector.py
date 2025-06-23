@@ -168,8 +168,7 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
             return self._build_use_case_info_obj(
                 use_case_keyname, module_path, obj, var_name_in_module)
 
-        else:
-            res = self._find_use_case_standard(module, use_case_keyname, module_path)
+        res = self._find_use_case_standard(module, use_case_keyname, module_path)
 
         if res is None:
             res = self._deep_search_of_metadata(use_case_keyname, module, module_path)
