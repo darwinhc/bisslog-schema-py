@@ -48,10 +48,9 @@ def test_register_runtime_config_wildcard(registry):
     assert "cli" in registry._wildcard_runtime_functions
 
 
-def test_register_runtime_config_invalid_runtime(registry):
-    with pytest.raises(ValueError):
-        registry.register_runtime_config(dummy_runtime_config, ["unknown"])
-
+def test_register_runtime_config_unknown_runtime(registry):
+    registry.register_runtime_config(dummy_runtime_config, ["unknown"])
+    assert "unknown" in registry._runtime_functions
 
 def test_register_runtime_config_invalid_wildcard(registry):
     with pytest.raises(ValueError):

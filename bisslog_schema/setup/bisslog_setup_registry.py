@@ -11,9 +11,9 @@ Features:
   and wildcard-based targeting.
 - Metadata inspection for documentation and tooling.
 """
-
+import warnings
 import inspect
-from typing import List, Dict, Optional, Callable
+from typing import List, Dict, Optional, Callable, Iterable, Tuple, Set
 
 from .runtime_type import RuntimeType
 from .setup_metadata import BisslogSetupFunction, BisslogSetup
@@ -76,7 +76,29 @@ class BisslogSetupRegistry:
         self._setup_function = func
         return func
 
-    def register_runtime_config(self, func: Callable, runtimes: List[str], enabled: bool = True):
+    def _get_wild_card_targets(self, runtimes: Iterable[str]) -> Tuple[Dict[str, Callable], Set[str]]:
+        targets = set(RuntimeType)
+        for exclusion in runtimes[0].split("-")[1:]:
+            try:
+                targets.discard(RuntimeType(exclusion))
+            except ValueError as err:
+                raise ValueError(f"Unknown runtime in exclusion: '{exclusion}'") from err
+        return self._wildcard_runtime_functions, targets
+
+    def _get_normal_targets(self, runtimes: Iterable[str]) -> Tuple[Dict[str, Callable], Set[str]]:
+        targets = set()
+        for r in runtimes:
+            if not isinstance(r, str):
+                warnings.warn(f"Runtime identifier {r} must be a string. Ignoring it.")
+                continue
+            if r.startswith("*"):
+                raise ValueError("Wildcard '*' must be used alone.")
+            if not r.isidentifier():
+                raise ValueError(f"Invalid runtime identifier: '{r}'")
+            targets.add(r)
+        return self._runtime_functions, targets
+
+    def register_runtime_config(self, func: Callable, runtimes: Iterable[str], enabled: bool = True):
         """
         Register a function for one or more runtimes or wildcard configurations.
 
@@ -107,25 +129,10 @@ class BisslogSetupRegistry:
         if not runtimes:
             raise ValueError("At least one runtime must be specified.")
 
-        registry = self._runtime_functions
-
         if len(runtimes) == 1 and runtimes[0].startswith("*"):
-            targets = set(RuntimeType)
-            for exclusion in runtimes[0].split("-")[1:]:
-                try:
-                    targets.discard(RuntimeType(exclusion))
-                except ValueError as err:
-                    raise ValueError(f"Unknown runtime in exclusion: '{exclusion}'") from err
-            registry = self._wildcard_runtime_functions
+            registry, targets = self._get_wild_card_targets(runtimes)
         else:
-            targets = set()
-            for r in runtimes:
-                if r.startswith("*"):
-                    raise ValueError("Wildcard '*' must be used alone.")
-                try:
-                    targets.add(RuntimeType(r))
-                except ValueError as err:
-                    raise ValueError(f"Unknown runtime: '{r}'") from err
+            registry, targets = self._get_normal_targets(runtimes)
 
         func.__runtime_config__ = True
         func.__runtime_config_available__ = tuple(targets)
