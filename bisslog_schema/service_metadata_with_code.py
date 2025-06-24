@@ -17,7 +17,6 @@ from dataclasses import dataclass
 from typing import Dict, Union, Callable, Any
 
 from .schema.service_info import ServiceInfo
-from .setup.setup_metadata import BisslogSetup
 from .use_case_code_inspector.use_case_code_metadata import UseCaseCodeInfo
 
 
@@ -37,4 +36,3 @@ class ServiceInfoWithCode:
     """
     declared_metadata: ServiceInfo
     discovered_use_cases: Dict[str, Union[UseCaseCodeInfo, Callable[..., Any]]]
-    setup_metadata: BisslogSetup
