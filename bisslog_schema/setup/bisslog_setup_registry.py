@@ -13,7 +13,7 @@ Features:
 """
 import warnings
 import inspect
-from typing import List, Dict, Optional, Callable, Iterable, Tuple, Set
+from typing import Dict, Optional, Callable, Iterable, Tuple, Set
 
 from .runtime_type import RuntimeType
 from .setup_metadata import BisslogSetupFunction, BisslogSetup
@@ -76,7 +76,8 @@ class BisslogSetupRegistry:
         self._setup_function = func
         return func
 
-    def _get_wild_card_targets(self, runtimes: Iterable[str]) -> Tuple[Dict[str, Callable], Set[str]]:
+    def _get_wild_card_targets(self,
+                               runtimes: Iterable[str]) -> Tuple[Dict[str, Callable], Set[str]]:
         targets = set(RuntimeType)
         for exclusion in runtimes[0].split("-")[1:]:
             try:
@@ -98,7 +99,8 @@ class BisslogSetupRegistry:
             targets.add(r)
         return self._runtime_functions, targets
 
-    def register_runtime_config(self, func: Callable, runtimes: Iterable[str], enabled: bool = True):
+    def register_runtime_config(self, func: Callable,
+                                runtimes: Iterable[str], enabled: bool = True):
         """
         Register a function for one or more runtimes or wildcard configurations.
 
