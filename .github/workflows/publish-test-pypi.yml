@@ -7,6 +7,7 @@ on:
     paths:
       - "bisslog_schema/**"
       - "pyproject.toml"
+      - ".github/**"
 
 jobs:
   run-changes-reception:
