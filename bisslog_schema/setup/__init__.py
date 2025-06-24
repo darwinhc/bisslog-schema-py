@@ -26,9 +26,6 @@ If no setup function exists, the runtime configuration matching the input runtim
 Wildcard-based runtime configs are only executed if no explicit match is found.
 """
 
-import inspect
-
-from typing import Union
 from .runtime_type import RuntimeType
 from .setup_metadata import BisslogSetupFunction, BisslogRuntimeConfig
 
