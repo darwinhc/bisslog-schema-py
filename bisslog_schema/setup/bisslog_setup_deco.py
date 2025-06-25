@@ -10,12 +10,12 @@ These decorators store the configuration in a shared `BisslogSetupRegistry`, all
 framework to introspect or execute appropriate functions depending on the runtime context.
 """
 
-from typing import Callable
+from typing import Callable, Optional, Union
 from .bisslog_setup_registry import BisslogSetupRegistry
 
 setup_registry = BisslogSetupRegistry()
 
-def bisslog_setup(*, enabled: bool = True):
+def bisslog_setup(func: Optional[Callable] = None, *, enabled: bool = True):
     """
     Decorator to register a global Bisslog setup function.
 
@@ -23,8 +23,19 @@ def bisslog_setup(*, enabled: bool = True):
     before any runtime-specific configurations are applied. Only one setup
     function can be registered; multiple definitions will raise a RuntimeError.
 
+    This decorator can be used with or without parentheses:
+
+        @bisslog_setup
+        def setup(): ...
+
+        @bisslog_setup(enabled=False)
+        def setup(): ...
+
     Parameters
     ----------
+    func : Callable, optional
+        The function being decorated, if used without parentheses.
+
     enabled : bool, optional
         Whether this setup should be registered. Defaults to True.
 
@@ -33,9 +44,16 @@ def bisslog_setup(*, enabled: bool = True):
     Callable
         The decorated function unchanged.
     """
-    def decorator(func: Callable):
+    if func is not None and callable(func):
+        # Called without parentheses: @bisslog_setup
         return setup_registry.register_setup(func, enabled=enabled)
-    return decorator
+
+    # Called with parentheses: @bisslog_setup(...)
+    def wrapper(f: Callable):
+        return setup_registry.register_setup(f, enabled=enabled)
+    return wrapper
+
+
 
 def bisslog_runtime_config(*runtimes: str, enabled: bool = True):
     """
