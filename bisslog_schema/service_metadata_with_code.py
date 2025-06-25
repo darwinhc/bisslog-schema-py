@@ -1,3 +1,18 @@
+"""
+Module for representing a complete service definition enriched with source code metadata.
+
+This module defines a dataclass that merges user-declared service information (e.g., from
+a YAML or JSON file) with implementation details discovered at runtime from the codebase.
+
+The resulting structure can be used for validation, consistency checks, code generation,
+or documentation of the service, ensuring alignment between declared contracts and real logic.
+
+Classes
+-------
+ServiceInfoWithCode
+    Encapsulates the full service definition, combining declared metadata, discovered use cases,
+    and associated setup configuration metadata.
+"""
 from dataclasses import dataclass
 from typing import Dict, Union, Callable, Any
 

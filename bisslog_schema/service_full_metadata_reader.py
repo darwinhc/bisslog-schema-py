@@ -8,7 +8,6 @@ combined structure that can be used for validation, generation, or documentation
 
 from typing import Optional, Dict, Union, Callable, Any
 
-
 from .use_case_code_inspector import (extract_use_case_code_metadata,
                                       PackageTreeReader, extract_use_case_obj_from_code)
 from .schema.read_metadata import read_service_metadata
@@ -58,7 +57,8 @@ class ServiceFullMetadataReader:
 
         uc_code_metadata = self.code_inspector(use_cases_folder_path)
         if not uc_code_metadata:
-            raise RuntimeError(f"Could not extract use case code metadata for {use_cases_folder_path}")
+            raise RuntimeError(
+                f"Could not extract use case code metadata for {use_cases_folder_path}")
 
         no_code_found = service_info_metadata.use_cases.keys() - uc_code_metadata.keys()
         if no_code_found:
