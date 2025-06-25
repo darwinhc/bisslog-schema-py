@@ -27,12 +27,12 @@ Wildcard-based runtime configs are only executed if no explicit match is found.
 """
 
 from .runtime_type import RuntimeType
-from .setup_metadata import BisslogSetupFunction, BisslogRuntimeConfig
+from .setup_metadata import BisslogSetupFunction, BisslogRuntimeConfig, BisslogSetup
 
 from .bisslog_setup_deco import setup_registry, bisslog_setup, bisslog_runtime_config
 
 
-def get_setup_metadata() -> dict:
+def get_setup_metadata() -> BisslogSetup:
     """
     Return complete metadata for setup and runtime configuration functions.
 
