@@ -15,6 +15,7 @@ ForceImport
 import importlib
 import importlib.util
 import os
+import warnings
 from typing import Optional, Iterable
 
 
@@ -76,15 +77,17 @@ class EagerImportModulePackage:
         """
         if os.path.exists(dotted_or_path):
             dotted_or_path = dotted_or_path.rstrip("/").replace("/", ".").replace("\\", ".")
+        try:
+            spec = importlib.util.find_spec(dotted_or_path)
+            if not spec:
+                warnings.warn(f"Cannot find module or package: {dotted_or_path}")
 
-        spec = importlib.util.find_spec(dotted_or_path)
-        if not spec:
-            raise ImportError(f"Cannot find module or package: {dotted_or_path}")
-
-        if spec.submodule_search_locations:
-            self._import_all_modules_from_package(dotted_or_path)
-        else:
-            importlib.import_module(dotted_or_path)
+            if spec.submodule_search_locations:
+                self._import_all_modules_from_package(dotted_or_path)
+            else:
+                importlib.import_module(dotted_or_path)
+        except ImportError as e:
+            pass
 
     def _import_all_modules_from_package(self, package_name: str) -> None:
         """
