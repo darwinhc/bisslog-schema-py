@@ -25,7 +25,7 @@ bisslog_schema = "bisslog_schema.cli:main"
 [tool.setuptools.packages.find]
 include = ["bisslog_schema", "bisslog_schema.*"]
 [tool.setuptools_scm]
-version_scheme = "semantic"
+version_scheme = "post-release"
 local_scheme = "no-local-version"
 
 [project.optional-dependencies]
