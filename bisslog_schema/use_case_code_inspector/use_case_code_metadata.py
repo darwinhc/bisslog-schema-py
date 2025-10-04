@@ -27,6 +27,7 @@ class UseCaseCodeInfo:
     name: str
     docs: Optional[str]
     module: Optional[str]
+    is_coroutine: bool
 
 @dataclass(frozen=True)
 class UseCaseCodeInfoObject(UseCaseCodeInfo):

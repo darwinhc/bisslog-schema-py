@@ -4,7 +4,7 @@ Module for resolving and extracting metadata from use case code modules.
 This module provides a resolver class that inspects Python modules to extract
 metadata about use case objects or classes, such as their documentation and variable names.
 """
-
+import asyncio
 from typing import Optional, Any, Type
 
 from bisslog.utils.is_free_function import is_free_function
@@ -44,9 +44,11 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
         """
         if is_free_function(obj):
             docs = obj.__doc__
+            is_coroutine = asyncio.iscoroutinefunction(obj)
         else:
             docs = obj.entrypoint.__doc__
-        return UseCaseCodeInfoObject(use_case_keyname, docs, module_path, var_name)
+            is_coroutine = asyncio.iscoroutinefunction(obj.entrypoint)
+        return UseCaseCodeInfoObject(use_case_keyname, docs, module_path, is_coroutine, var_name)
 
     @classmethod
     def _find_use_case_standard(cls, module, use_case_keyname: str,
@@ -130,7 +132,8 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
         """
         new_obj = class_obj()
         docs = new_obj.entrypoint.__doc__
-        return UseCaseCodeInfoClass(use_case_keyname, docs, module_path, class_obj.__name__)
+        is_coroutine = asyncio.iscoroutinefunction(new_obj.entrypoint)
+        return UseCaseCodeInfoClass(use_case_keyname, docs, module_path, is_coroutine, class_obj.__name__)
 
     def __call__(self, module_path: str, *,
                 var_name_in_module: Optional[str] = None):
