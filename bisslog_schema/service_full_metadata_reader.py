@@ -68,7 +68,8 @@ class ServiceFullMetadataReader:
         if no_metadata_found:
             print("No metadata was found for the following use case keynames:", no_metadata_found)
 
-        uc_keyname_code_with_metadata = uc_code_metadata.keys() & service_info_metadata.use_cases.keys()
+        uc_keyname_code_with_metadata = (uc_code_metadata.keys() &
+                                         service_info_metadata.use_cases.keys())
         print(f"There are {len(uc_keyname_code_with_metadata)} use cases to be loaded")
 
         new_use_case_code_info: Dict[str, Union[UseCaseCodeInfo, Callable[..., Any]]] = {}

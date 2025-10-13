@@ -9,7 +9,7 @@ strategies.
 """
 import importlib
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any, Optional, Iterator, Tuple
 
 from ...utils.to_snake_case import to_snake_case
 
@@ -122,6 +122,19 @@ class UseCaseModuleInspector(ABC):
         """
         module = importlib.import_module(module_path)
         return module, module.__name__.split(".")[-1]
+
+    @classmethod
+    def _find_use_case_name_standard(
+            cls, module, use_case_keyname: str) -> Iterator[Tuple[str, Any]]:
+        """Find a use case object in the module using standard naming conventions."""
+        for suggested_var_name in cls._generate_var_name_suggestions(use_case_keyname):
+            if hasattr(module, suggested_var_name):
+                attr = getattr(module, suggested_var_name)
+                if attr is None:
+                    continue
+                if attr.__module__ != module.__name__ or not cls._is_use_case_object(attr):
+                    continue
+                yield suggested_var_name, attr
 
     @staticmethod
     def _generate_var_name_suggestions(use_case_keyname: str):
