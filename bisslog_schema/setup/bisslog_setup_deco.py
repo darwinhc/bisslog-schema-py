@@ -10,7 +10,8 @@ These decorators store the configuration in a shared `BisslogSetupRegistry`, all
 framework to introspect or execute appropriate functions depending on the runtime context.
 """
 
-from typing import Callable, Optional, Union
+from typing import Callable, Optional
+
 from .bisslog_setup_registry import BisslogSetupRegistry
 
 setup_registry = BisslogSetupRegistry()

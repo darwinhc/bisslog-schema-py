@@ -1,4 +1,5 @@
 import pytest
+
 from bisslog_schema.setup.bisslog_setup_registry import BisslogSetupRegistry
 from bisslog_schema.setup.runtime_type import RuntimeType
 from bisslog_schema.setup.setup_metadata import BisslogSetupFunction, BisslogRuntimeConfig

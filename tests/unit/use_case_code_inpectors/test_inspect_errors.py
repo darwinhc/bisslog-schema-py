@@ -1,6 +1,6 @@
 import pytest
-from bisslog_schema import extract_use_case_obj_from_code, extract_use_case_code_metadata
 
+from bisslog_schema import extract_use_case_obj_from_code, extract_use_case_code_metadata
 
 
 def test_inspect_errors_not_find_defaults():

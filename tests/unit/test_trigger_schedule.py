@@ -1,4 +1,5 @@
 import pytest
+
 from bisslog_schema.schema.triggers.trigger_schedule import TriggerSchedule
 
 

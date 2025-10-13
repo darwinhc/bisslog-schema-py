@@ -4,14 +4,14 @@ including criticality, triggers, and actor details.
 """
 
 from dataclasses import dataclass, field
-from typing import List, Optional, Union, Any, Dict
 from json import dumps
+from typing import List, Optional, Union, Any, Dict
 
-from ..commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 from .entity_info import EntityInfo
 from .enums.criticality import CriticalityEnum
 from .external_interaction import ExternalInteraction
 from .triggers.trigger_info import TriggerInfo
+from ..commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
 
 
 @dataclass
