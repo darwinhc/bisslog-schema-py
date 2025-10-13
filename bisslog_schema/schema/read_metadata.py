@@ -2,9 +2,9 @@
 Module for reading and parsing service metadata files.
 """
 
-import os.path
 import importlib
 import json
+import os.path
 import sys
 from typing import Optional
 

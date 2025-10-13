@@ -26,10 +26,9 @@ If no setup function exists, the runtime configuration matching the input runtim
 Wildcard-based runtime configs are only executed if no explicit match is found.
 """
 
+from .bisslog_setup_deco import setup_registry, bisslog_setup, bisslog_runtime_config
 from .runtime_type import RuntimeType
 from .setup_metadata import BisslogSetupFunction, BisslogRuntimeConfig, BisslogSetup
-
-from .bisslog_setup_deco import setup_registry, bisslog_setup, bisslog_runtime_config
 
 
 def get_setup_metadata() -> BisslogSetup:

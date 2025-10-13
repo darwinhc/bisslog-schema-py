@@ -2,6 +2,7 @@ from bisslog import FullUseCase
 
 from .SomethingElse import b as use_case_4
 
+
 class UseCase4(FullUseCase):
     """
     Use case 4 implementation.

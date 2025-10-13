@@ -8,11 +8,11 @@ combined structure that can be used for validation, generation, or documentation
 
 from typing import Optional, Dict, Union, Callable, Any
 
-from .use_case_code_inspector import (extract_use_case_code_metadata,
-                                      PackageTreeReader, extract_use_case_obj_from_code)
 from .schema.read_metadata import read_service_metadata
 from .schema.use_case_info import UseCaseInfo
 from .service_metadata_with_code import ServiceInfoWithCode
+from .use_case_code_inspector import (extract_use_case_code_metadata,
+                                      PackageTreeReader, extract_use_case_obj_from_code)
 from .use_case_code_inspector.use_case_code_metadata import UseCaseCodeInfo
 
 

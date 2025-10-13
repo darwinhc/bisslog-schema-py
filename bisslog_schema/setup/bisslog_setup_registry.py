@@ -11,8 +11,8 @@ Features:
   and wildcard-based targeting.
 - Metadata inspection for documentation and tooling.
 """
-import warnings
 import inspect
+import warnings
 from typing import Dict, Optional, Callable, Iterable, Tuple, Set
 
 from .runtime_type import RuntimeType

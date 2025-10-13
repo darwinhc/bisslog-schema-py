@@ -1,8 +1,11 @@
+import re
 from typing import List
 from unittest.mock import patch
-from bisslog_schema.commands.analyze_metadata_file.analyze_metadata import analyze_command, generate_report, print_and_generate_summary
-from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import MetadataAnalysisReport
-import re
+
+from bisslog_schema.commands.analyze_metadata_file.analyze_metadata import analyze_command, \
+    generate_report, print_and_generate_summary
+from bisslog_schema.commands.analyze_metadata_file.metadata_analysis_report import \
+    MetadataAnalysisReport
 
 errors_string = """ServiceInfo 'unknown' error: The 'name' field is required and must be a non-empty string.
 ServiceInfo 'unknown' error: The 'description' field must be a string if provided.
