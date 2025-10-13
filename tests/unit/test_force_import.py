@@ -1,14 +1,14 @@
 
-import os
-import tempfile
-import shutil
-import textwrap
 import importlib.util
+import os
+import shutil
 import sys
-import pytest
-
+import tempfile
+import textwrap
 from typing import List
+
 from bisslog_schema.eager_import_module_or_package import EagerImportModulePackage
+
 
 def create_test_package(package_name: str, files: List[str]):
     temp_dir = tempfile.mkdtemp()

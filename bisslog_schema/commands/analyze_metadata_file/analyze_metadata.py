@@ -4,9 +4,8 @@ Module for analyzing metadata files and generating analysis reports.
 This module provides functionality to read metadata files in various formats
 (e.g., YAML, JSON) and analyze their contents to produce a `MetadataAnalysisReport`.
 """
-from typing import Optional, Dict, Any
-
 import sys
+from typing import Optional, Dict, Any
 
 from .metadata_analysis_report import MetadataAnalysisReport
 from ...schema.read_metadata import read_metadata_file

@@ -1,4 +1,5 @@
 import pytest
+
 from bisslog_schema.schema.service_info import ServiceInfo
 from bisslog_schema.schema.use_case_info import UseCaseInfo
 

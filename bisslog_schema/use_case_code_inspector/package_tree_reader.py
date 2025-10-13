@@ -5,8 +5,8 @@ This module provides functionality to inspect, analyze, and resolve use case obj
 within a given package or directory structure at runtime.
 """
 
-import os
 import importlib.util
+import os
 from typing import Optional, Callable, Any
 
 from .use_case_analyzer_base import UseCaseCodeAnalyzerBase
@@ -35,7 +35,7 @@ class PackageTreeReader(UseCaseCodeAnalyzerBase):
         Returns
         -------
         dict
-            Dictionary mapping use case names to their resolved objects.
+            Dictionary mapping use-case names to their resolved objects.
         """
         module_path = self._find_module_path(path)
         return self._collect_objects_from_package(module_path)

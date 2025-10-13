@@ -1,10 +1,12 @@
 """Test module for bisslog_schema CLI using pytest."""
 
-import pytest
-from unittest.mock import patch, MagicMock
-import argparse
 import sys
+from unittest.mock import patch, MagicMock
+
+import pytest
+
 from bisslog_schema.cli import main
+
 
 class TestCLICommandParsing:
     """Test suite for CLI command parsing functionality."""
