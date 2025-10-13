@@ -86,7 +86,7 @@ class EagerImportModulePackage:
                 self._import_all_modules_from_package(dotted_or_path)
             else:
                 importlib.import_module(dotted_or_path)
-        except ImportError as e:
+        except ImportError:
             pass
 
     def _import_all_modules_from_package(self, package_name: str) -> None:

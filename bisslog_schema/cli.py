@@ -63,6 +63,6 @@ def main():
                            format_file=args.format_file,
                            encoding=args.encoding,
                            min_warnings=args.min_warnings)
-    except Exception as e:
+    except Exception as e:  #pylint: disable=broad-except
         print(f"Error: {str(e)}", file=sys.stderr)
         sys.exit(2)
