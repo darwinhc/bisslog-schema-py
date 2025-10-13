@@ -1,7 +1,9 @@
-import pytest
 from unittest.mock import Mock, patch, ANY
 
+import pytest
+
 import bisslog_schema.setup.bisslog_setup_deco as decorators
+
 
 @pytest.fixture
 def mock_registry():

@@ -8,8 +8,8 @@ distinguish between dot-paths (`package.module`) and file system paths
 
 """
 
-import re
 import os
+import re
 from typing import Optional
 
 

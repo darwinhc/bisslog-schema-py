@@ -1,10 +1,8 @@
-import os
 import pytest
 
 from bisslog_schema import extract_use_case_obj_from_code, extract_use_case_code_metadata
 from bisslog_schema.use_case_code_inspector.use_case_code_metadata import UseCaseCodeInfo, \
     UseCaseCodeInfoObject, UseCaseCodeInfoClass
-
 
 expected_use_case_module_names = ["use_case_1", "use_case_2",
                                   "use_case_3", "use_case_4", "use_case_5"]

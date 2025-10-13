@@ -2,6 +2,7 @@ import pytest
 
 from bisslog_schema.utils.snake_to_pascal_case import snake_to_pascal
 
+
 @pytest.mark.parametrize("input_str, expected", [
     ("snake_case", "SnakeCase"),
     ("multiple_words_here", "MultipleWordsHere"),

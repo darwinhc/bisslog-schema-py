@@ -7,9 +7,9 @@ module. It supports both standard and custom naming conventions for identifying
 use case objects or classes, and is intended to be subclassed for concrete resolution
 strategies.
 """
+import importlib
 from abc import ABC, abstractmethod
 from typing import Any, Optional
-import importlib
 
 from ...utils.to_snake_case import to_snake_case
 

@@ -5,8 +5,8 @@ from enum import Enum
 from typing import Type, Optional
 
 from ..triggers.trigger_consumer import TriggerConsumer
-from ..triggers.trigger_options import TriggerOptions
 from ..triggers.trigger_http import TriggerHttp
+from ..triggers.trigger_options import TriggerOptions
 from ..triggers.trigger_schedule import TriggerSchedule
 from ..triggers.trigger_websocket import TriggerWebsocket
 

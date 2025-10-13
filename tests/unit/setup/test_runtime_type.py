@@ -1,4 +1,5 @@
 import pytest
+
 from bisslog_schema.setup.runtime_type import RuntimeType
 
 

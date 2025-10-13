@@ -1,4 +1,5 @@
 import pytest
+
 from bisslog_schema.schema.external_interaction import ExternalInteraction
 
 

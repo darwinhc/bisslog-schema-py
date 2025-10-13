@@ -5,6 +5,7 @@ import pytest
 from bisslog_schema.schema.enums.criticality import CriticalityEnum
 from bisslog_schema.schema.read_metadata import read_service_metadata
 
+
 def test_read_yml_webhook_example():
     service_data = read_service_metadata("examples/webhook.yml")
     assert service_data.type == "microservice"
