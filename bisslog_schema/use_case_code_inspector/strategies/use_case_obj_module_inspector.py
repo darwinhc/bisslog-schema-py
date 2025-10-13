@@ -40,14 +40,8 @@ class UseCaseObjectModuleInspector(UseCaseModuleInspector):
         Optional[Callable[..., Any]]
             The matched use case object, if found.
         """
-        for suggested_var_name in cls._generate_var_name_suggestions(use_case_keyname):
-            if hasattr(module, suggested_var_name):
-                attr = getattr(module, suggested_var_name)
-                if attr is None:
-                    continue
-                if attr.__module__ != module.__name__ or not cls._is_use_case_object(attr):
-                    continue
-                return attr
+        for _, attr in cls._find_use_case_name_standard(module, use_case_keyname):
+            return attr
         return None
 
     @classmethod
