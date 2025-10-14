@@ -68,15 +68,9 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
         -------
         Optional[UseCaseCodeInfo]
             The metadata object for the use case, or None if not found."""
-        for suggested_var_name in cls._generate_var_name_suggestions(use_case_keyname):
-            if hasattr(module, suggested_var_name):
-                attr = getattr(module, suggested_var_name)
-                if attr is None:
-                    continue
-                if attr.__module__ != module.__name__ or not cls._is_use_case_object(attr):
-                    continue
-                return cls._build_use_case_info_obj(
-                    use_case_keyname, module_path, attr, suggested_var_name)
+        for suggested_var_name, attr in cls._find_use_case_name_standard(module, use_case_keyname):
+            return cls._build_use_case_info_obj(
+                use_case_keyname, module_path, attr, suggested_var_name)
         return None
 
     @classmethod
@@ -133,7 +127,8 @@ class UseCaseMetadataModuleInspector(UseCaseModuleInspector):
         new_obj = class_obj()
         docs = new_obj.entrypoint.__doc__
         is_coroutine = asyncio.iscoroutinefunction(new_obj.entrypoint)
-        return UseCaseCodeInfoClass(use_case_keyname, docs, module_path, is_coroutine, class_obj.__name__)
+        return UseCaseCodeInfoClass(use_case_keyname, docs, module_path,
+                                    is_coroutine, class_obj.__name__)
 
     def __call__(self, module_path: str, *,
                 var_name_in_module: Optional[str] = None):
