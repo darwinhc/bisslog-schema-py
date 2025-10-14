@@ -11,9 +11,7 @@ authors = [
     {name = "Darwin Stiven Herrera Cartagena", email = "darwinsherrerac@gmail.com"}
 ]
 requires-python = ">=3.7"
-dependencies = [
-    "bisslog>=0.0.9"
-]
+dependencies = []
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent"
